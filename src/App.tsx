@@ -516,16 +516,17 @@ export default function App() {
       <div className="flex overflow-x-auto gap-2 px-3 py-2 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3">
         {days.map((d: string) => {
           const isRest = plan[d].groups.length === 0;
+          const isActive = activeDay === d;
           return (
             <button
               key={d}
               onClick={() => setActiveDay(d)}
-              className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
-                activeDay === d
-                  ? "bg-orange-500 text-white"
+              className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm font-semibold transition-all border-2 ${
+                isActive
+                  ? "bg-gray-800 text-white ring"
                   : isRest
-                  ? "bg-gray-800 text-gray-500"
-                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  ? "bg-gray-800 text-gray-500 border-gray-700"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700 border-gray-700"
               }`}
             >
               {d.slice(0,3)}
