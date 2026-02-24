@@ -554,30 +554,13 @@ export default function App() {
           <span>💡 {day.note}</span>
         </p>
         <ul className="mt-3 flex flex-wrap gap-2 list-none pl-0">
-          {day.sessions.map((s: string, i: number) => {
-            const isCardio = /Cardio|LISS|HIIT/i.test(s);
-            const key = `${activeDay}-session-${i}`;
-            const done = checked[key];
-            return (
-              <li key={i} className="flex items-center gap-2">
-                <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
-                  {isCardio ? "❤️‍🔥" : "⏰"} {s}
-                </span>
-                {isCardio && (
-                  <button
-                    type="button"
-                    onClick={() => toggleCheck(key)}
-                    className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
-                      done ? "bg-green-500 border-green-500" : "border-gray-600"
-                    }`}
-                    aria-label="Mark cardio session complete"
-                  >
-                    {done && <span className="text-white text-xs">✓</span>}
-                  </button>
-                )}
-              </li>
-            );
-          })}
+          {day.sessions.map((s: string, i: number) => (
+            <li key={i}>
+              <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
+                ⏰ {s}
+              </span>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -590,84 +573,173 @@ export default function App() {
             <div className="text-gray-500 mt-2">{day.note}</div>
           </div>
         ) : (
-          day.groups.map((g: ExerciseGroup, gi: number) => (
-            <div key={gi} className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-              {/* Group Header */}
-              <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-white text-sm">{g.name}</div>
-                  <div className="text-gray-400 text-xs mt-0.5">{g.sets} sets per exercise</div>
+          <>
+            {day.groups.map((g: ExerciseGroup, gi: number) => (
+              <div key={gi} className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+                {/* Group Header */}
+                <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-white text-sm">{g.name}</div>
+                    <div className="text-gray-400 text-xs mt-0.5">{g.sets} sets per exercise</div>
+                  </div>
+                  <span className={`text-xs font-bold px-2 py-1 rounded-full bg-gray-900 ${rpeColor(g.rpe)}`}>
+                    {g.rpe}
+                  </span>
                 </div>
-                <span className={`text-xs font-bold px-2 py-1 rounded-full bg-gray-900 ${rpeColor(g.rpe)}`}>
-                  {g.rpe}
-                </span>
-              </div>
 
-              {/* Exercise Pairs */}
-              <div className="divide-y divide-gray-800">
-                {g.pairs.map((pair: ExercisePair, pi: number) => {
-                  const keyA = `${activeDay}-${gi}-${pi}-A`;
-                  const keyB = `${activeDay}-${gi}-${pi}-B`;
-                  const prevWeekData = allWeeks[getPreviousWeekId(selectedWeek)];
-                  const lastWeightA = prevWeekData?.weights?.[keyA];
-                  const lastWeightB = prevWeekData?.weights?.[keyB];
-                  const setLabel = pair.b !== "—" ? "⚡ Superset" : "🏋️ Straight Set";
-                  return (
-                    <div key={pi} className="px-4 py-3">
-                      <p className="text-xs text-gray-500 mb-2 flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
-                        <span className="text-gray-500 flex-shrink-0">•</span>
-                        <span className="truncate">{setLabel} — {pair.reps} reps · Rest {pair.rest}</span>
-                      </p>
-                      {/* Exercise A */}
-                      <div className={`flex items-center gap-3 p-2 rounded-lg mb-2 ${checked[keyA] ? "bg-green-900/30" : "bg-gray-800"}`}>
-                        <button onClick={() => toggleCheck(keyA)} className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${checked[keyA] ? "bg-green-500 border-green-500" : "border-gray-600"}`}>
-                          {checked[keyA] && <span className="text-white text-xs">✓</span>}
-                        </button>
-                        <div className="flex-1 min-w-0 flex flex-col justify-center">
-                          <div className={`font-semibold text-sm truncate ${checked[keyA] ? "line-through text-gray-500" : "text-white"}`} title={pair.a}>
-                            {pair.b !== "—" ? "A: " : ""}{pair.a}
-                          </div>
-                          {lastWeightA != null && lastWeightA !== "" && (
-                            <div className="text-xs text-gray-500 mt-0.5">Last: {lastWeightA} kg</div>
-                          )}
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="kg"
-                          value={weights[keyA] || ""}
-                          onChange={e => setWeight(keyA, e.target.value)}
-                          className="w-12 flex-shrink-0 bg-gray-700 text-white text-center text-sm rounded-lg px-2 py-1.5 border border-gray-600 focus:border-orange-400 outline-none"
-                        />
-                      </div>
-                      {/* Exercise B */}
-                      {pair.b !== "—" && (
-                        <div className={`flex items-center gap-3 p-2 rounded-lg ${checked[keyB] ? "bg-green-900/30" : "bg-gray-800"}`}>
-                          <button onClick={() => toggleCheck(keyB)} className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${checked[keyB] ? "bg-green-500 border-green-500" : "border-gray-600"}`}>
-                            {checked[keyB] && <span className="text-white text-xs">✓</span>}
+                {/* Exercise Pairs */}
+                <div className="divide-y divide-gray-800">
+                  {g.pairs.map((pair: ExercisePair, pi: number) => {
+                    const keyA = `${activeDay}-${gi}-${pi}-A`;
+                    const keyB = `${activeDay}-${gi}-${pi}-B`;
+                    const prevWeekData = allWeeks[getPreviousWeekId(selectedWeek)];
+                    const lastWeightA = prevWeekData?.weights?.[keyA];
+                    const lastWeightB = prevWeekData?.weights?.[keyB];
+                    const setLabel = pair.b !== "—" ? "⚡ Superset" : "🏋️ Straight Set";
+                    return (
+                      <div key={pi} className="px-4 py-3">
+                        <p className="text-xs text-gray-500 mb-2 flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
+                          <span className="text-gray-500 flex-shrink-0">•</span>
+                          <span className="truncate">{setLabel} — {pair.reps} reps · Rest {pair.rest}</span>
+                        </p>
+                        {/* Exercise A */}
+                        <div className={`flex items-center gap-3 p-2 rounded-lg mb-2 ${checked[keyA] ? "bg-green-900/30" : "bg-gray-800"}`}>
+                          <button onClick={() => toggleCheck(keyA)} className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${checked[keyA] ? "bg-green-500 border-green-500" : "border-gray-600"}`}>
+                            {checked[keyA] && <span className="text-white text-xs">✓</span>}
                           </button>
                           <div className="flex-1 min-w-0 flex flex-col justify-center">
-                            <div className={`font-semibold text-sm truncate ${checked[keyB] ? "line-through text-gray-500" : "text-white"}`} title={pair.b}>
-                              B: {pair.b}
+                            <div className={`font-semibold text-sm truncate ${checked[keyA] ? "line-through text-gray-500" : "text-white"}`} title={pair.a}>
+                              {pair.b !== "—" ? "A: " : ""}{pair.a}
                             </div>
-                            {lastWeightB != null && lastWeightB !== "" && (
-                              <div className="text-xs text-gray-500 mt-0.5">Last: {lastWeightB} kg</div>
+                            {lastWeightA != null && lastWeightA !== "" && (
+                              <div className="text-xs text-gray-500 mt-0.5">Last: {lastWeightA} kg</div>
                             )}
                           </div>
                           <input
                             type="text"
                             placeholder="kg"
-                            value={weights[keyB] || ""}
-                            onChange={e => setWeight(keyB, e.target.value)}
+                            value={weights[keyA] || ""}
+                            onChange={e => setWeight(keyA, e.target.value)}
                             className="w-12 flex-shrink-0 bg-gray-700 text-white text-center text-sm rounded-lg px-2 py-1.5 border border-gray-600 focus:border-orange-400 outline-none"
                           />
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+                        {/* Exercise B */}
+                        {pair.b !== "—" && (
+                          <div className={`flex items-center gap-3 p-2 rounded-lg ${checked[keyB] ? "bg-green-900/30" : "bg-gray-800"}`}>
+                            <button onClick={() => toggleCheck(keyB)} className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${checked[keyB] ? "bg-green-500 border-green-500" : "border-gray-600"}`}>
+                              {checked[keyB] && <span className="text-white text-xs">✓</span>}
+                            </button>
+                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                              <div className={`font-semibold text-sm truncate ${checked[keyB] ? "line-through text-gray-500" : "text-white"}`} title={pair.b}>
+                                B: {pair.b}
+                              </div>
+                              {lastWeightB != null && lastWeightB !== "" && (
+                                <div className="text-xs text-gray-500 mt-0.5">Last: {lastWeightB} kg</div>
+                              )}
+                            </div>
+                            <input
+                              type="text"
+                              placeholder="kg"
+                              value={weights[keyB] || ""}
+                              onChange={e => setWeight(keyB, e.target.value)}
+                              className="w-12 flex-shrink-0 bg-gray-700 text-white text-center text-sm rounded-lg px-2 py-1.5 border border-gray-600 focus:border-orange-400 outline-none"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+
+            {/* Cardio completion after weightlifting sets */}
+            {(() => {
+              const cardioSessions = day.sessions.filter((s: string) =>
+                /Cardio|LISS|HIIT/i.test(s)
+              );
+              if (cardioSessions.length === 0) return null;
+              const cardioRpe = "RPE 7–9";
+              
+              // Extract time from first cardio session (format: "Evening 6–7pm (Cardio LISS 45')")
+              const firstCardio = cardioSessions[0];
+              const timeMatch = firstCardio.match(/^([^(]+)/);
+              const time = timeMatch ? timeMatch[1].trim() : "";
+              
+              return (
+                <div className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+                  {/* Group Header */}
+                  <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-white text-sm">CARDIO - {time}</div>
+                      <div className="text-gray-400 text-xs mt-0.5">
+                        {cardioSessions.length} session{cardioSessions.length > 1 ? "s" : ""} · Finish after weights
+                      </div>
+                    </div>
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full bg-gray-900 ${rpeColor(cardioRpe)}`}>
+                      {cardioRpe}
+                    </span>
+                  </div>
+
+                  {/* Cardio Items */}
+                  <div className="divide-y divide-gray-800">
+                    {cardioSessions.map((cardioSession: string, ci: number) => {
+                      const cardioKey = `${activeDay}-cardio-${ci}`;
+                      const cardioDone = checked[cardioKey];
+
+                      // Extract cardio type from inside parentheses (format: "Evening 6–7pm (Cardio LISS 45')")
+                      const cardioMatch = cardioSession.match(/\(([^)]+)\)/);
+                      const cardioType = cardioMatch ? cardioMatch[1].trim() : cardioSession;
+                      
+                      // Determine if HIIT or LISS and create instruction note
+                      const isHIIT = /HIIT/i.test(cardioType);
+                      const isLISS = /LISS/i.test(cardioType);
+                      const durationMatch = cardioType.match(/(\d+)/);
+                      const duration = durationMatch ? durationMatch[1] : "";
+                      
+                      let instructionNote = "";
+                      if (isHIIT) {
+                        instructionNote = `HIIT — 30s at 85–95% HRmax / 60s at 50–60% HRmax × 8–10 rounds`;
+                      } else if (isLISS) {
+                        instructionNote = `LISS — ${duration}' at 60–70% HRmax continuous`;
+                      } else {
+                        instructionNote = cardioType;
+                      }
+
+                      return (
+                        <div key={ci} className="px-4 py-3">
+                          <p className="text-xs text-gray-500 mb-2 flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
+                            <span className="text-gray-500 flex-shrink-0">•</span>
+                            <span className="truncate">{instructionNote}</span>
+                          </p>
+                          <div className={`flex items-center gap-3 p-2 rounded-lg ${cardioDone ? "bg-green-900/30" : "bg-gray-800"}`}>
+                            <button
+                              onClick={() => toggleCheck(cardioKey)}
+                              className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
+                                cardioDone ? "bg-green-500 border-green-500" : "border-gray-600"
+                              }`}
+                            >
+                              {cardioDone && <span className="text-white text-xs">✓</span>}
+                            </button>
+                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                              <div
+                                className={`font-semibold text-sm truncate ${
+                                  cardioDone ? "line-through text-gray-500" : "text-white"
+                                }`}
+                                title={cardioSession}
+                              >
+                                ❤️‍🔥 {cardioType}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+          </>
         )}
 
         {/* RPE Guide */}
