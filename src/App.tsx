@@ -567,10 +567,22 @@ export default function App() {
       {/* Workout Groups */}
       <div className="px-4 py-4 space-y-6 flex-1">
         {day.groups.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">{day.emoji}</div>
-            <div className="text-xl font-bold text-gray-300">{day.label}</div>
-            <div className="text-gray-500 mt-2">{day.note}</div>
+          <div className="py-10">
+            <div className="text-center">
+              <div className="text-6xl mb-4">{day.emoji}</div>
+              <div className="text-xl font-bold text-gray-300">{day.label}</div>
+              <div className="text-gray-500 mt-2">{day.note}</div>
+            </div>
+            {/* Extra content for rest days to avoid super-short pages on mobile */}
+            <div className="mt-8 space-y-3 text-sm text-gray-400 max-w-xl mx-auto">
+              <p className="font-semibold text-gray-300 text-center">Suggested recovery checklist</p>
+              <ul className="space-y-1 list-disc list-inside">
+                <li>10–15' easy walk or light stretching</li>
+                <li>Hit daily step target and drink 2–3L of water</li>
+                <li>8+ hours of sleep and 1–2 high-protein meals</li>
+              </ul>
+            </div>
+            <div className="h-24" />
           </div>
         ) : (
           <>
