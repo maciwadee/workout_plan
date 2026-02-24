@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 const STORAGE_KEY = "workout-tracker-v1";
 
@@ -51,6 +51,32 @@ function getNextWeekId(weekId: string): string {
 
 type WeekData = { checked: Record<string, boolean>; weights: Record<string, string> };
 
+type ExercisePair = {
+  a: string;
+  b: string;
+  reps: string;
+  rest: string;
+};
+
+type ExerciseGroup = {
+  name: string;
+  sets: number;
+  rpe: string;
+  pairs: ExercisePair[];
+};
+
+type DayPlan = {
+  label: string;
+  emoji: string;
+  note: string;
+  sessions: string[];
+  groups: ExerciseGroup[];
+};
+
+type PlanType = {
+  [key: string]: DayPlan;
+};
+
 function loadAllWeeks(): Record<string, WeekData> {
   try {
     const raw = typeof localStorage !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
@@ -70,7 +96,7 @@ function saveAllWeeks(allWeeks: Record<string, WeekData>): void {
   } catch (_) {}
 }
 
-const plan = {
+const plan: PlanType = {
   "Monday": {
     label: "Chest + Back + Abs",
     emoji: "🫁🔙🔥",
@@ -287,7 +313,7 @@ const plan = {
 
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
-const rpeColor = (rpe) => {
+const rpeColor = (rpe: string): string => {
   if (rpe.includes("9")) return "text-red-400";
   if (rpe.includes("8")) return "text-yellow-400";
   return "text-green-400";
@@ -300,9 +326,9 @@ function getTodayDayName(): string {
 
 function buildKeyToExerciseName(): Record<string, string> {
   const map: Record<string, string> = {};
-  days.forEach((day) => {
-    plan[day].groups.forEach((g, gi) => {
-      g.pairs.forEach((pair, pi) => {
+  days.forEach((day: string) => {
+    plan[day].groups.forEach((g: ExerciseGroup, gi: number) => {
+      g.pairs.forEach((pair: ExercisePair, pi: number) => {
         map[`${day}-${gi}-${pi}-A`] = pair.a;
         if (pair.b !== "—") map[`${day}-${gi}-${pi}-B`] = pair.b;
       });
@@ -316,10 +342,10 @@ const keyToExerciseName = buildKeyToExerciseName();
 function buildExerciseHistory(allWeeks: Record<string, WeekData>): Record<string, string[]> {
   const byExercise: Record<string, string[]> = {};
   const weekIds = Object.keys(allWeeks).sort().reverse().slice(0, 8);
-  weekIds.forEach((weekId) => {
+  weekIds.forEach((weekId: string) => {
     const w = allWeeks[weekId];
     if (!w?.weights) return;
-    Object.entries(w.weights).forEach(([key, val]) => {
+    Object.entries(w.weights).forEach(([key, val]: [string, string]) => {
       if (val == null || val === "") return;
       const name = keyToExerciseName[key];
       if (name) {
@@ -340,17 +366,17 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   lines.push("Plan: 5-day split — Mon Chest+Back+Abs, Tue Shoulders+Arms, Wed Legs+Glutes+Calves, Thu Rest, Fri Chest+Shoulders+Triceps, Sat Back+Biceps+Rear Delt, Sun Active recovery.");
   lines.push("");
   const weekIds = Object.keys(allWeeks).sort().reverse().slice(0, 8);
-  weekIds.forEach((weekId) => {
+  weekIds.forEach((weekId: string) => {
     lines.push(`## Week ${weekId} (${getWeekLabel(weekId)})`);
     lines.push("");
     const w = allWeeks[weekId];
     if (!w) return;
-    days.forEach((day) => {
+    days.forEach((day: string) => {
       const groups = plan[day].groups;
       if (groups.length === 0) return;
       const items: string[] = [];
-      groups.forEach((g, gi) => {
-        g.pairs.forEach((pair, pi) => {
+      groups.forEach((g: ExerciseGroup, gi: number) => {
+        g.pairs.forEach((pair: ExercisePair, pi: number) => {
           const keyA = `${day}-${gi}-${pi}-A`;
           const keyB = `${day}-${gi}-${pi}-B`;
           const doneA = w.checked?.[keyA];
@@ -371,7 +397,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   lines.push("## Progress by exercise (last 8 weeks, newest first)");
   lines.push("");
   const history = buildExerciseHistory(allWeeks);
-  Object.entries(history).forEach(([name, weights]) => {
+  Object.entries(history).forEach(([name, weights]: [string, string[]]) => {
     lines.push(`- **${name}**: ${weights.join(", ")} kg`);
   });
   return lines.join("\n");
@@ -380,7 +406,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
 function buildJsonReport(allWeeks: Record<string, WeekData>): string {
   const weekIds = Object.keys(allWeeks).sort().reverse();
   const weeks: Record<string, { checked: Record<string, boolean>; weights: Record<string, string>; label: string }> = {};
-  weekIds.forEach((weekId) => {
+  weekIds.forEach((weekId: string) => {
     const w = allWeeks[weekId];
     if (w) weeks[weekId] = { ...w, label: getWeekLabel(weekId) };
   });
@@ -426,7 +452,7 @@ export default function App() {
 
   const day = plan[activeDay];
 
-  const totalSets = day.groups.reduce((acc, g) => acc + g.sets * g.pairs.length, 0);
+  const totalSets = day.groups.reduce((acc: number, g: ExerciseGroup) => acc + g.sets * g.pairs.length, 0);
 
   const previousWeekId = getPreviousWeekId(selectedWeek);
   const nextWeekId = getNextWeekId(selectedWeek);
@@ -488,7 +514,7 @@ export default function App() {
 
       {/* Day Selector */}
       <div className="flex overflow-x-auto gap-2 px-3 py-3 bg-gray-900 border-b border-gray-800">
-        {days.map(d => {
+        {days.map((d: string) => {
           const isRest = plan[d].groups.length === 0;
           return (
             <button
@@ -528,7 +554,7 @@ export default function App() {
           <span>💡 {day.note}</span>
         </p>
         <ul className="mt-3 flex flex-wrap gap-2 list-none pl-0">
-          {day.sessions.map((s,i) => (
+          {day.sessions.map((s: string, i: number) => (
             <li key={i}><span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">⏰ {s}</span></li>
           ))}
         </ul>
@@ -543,7 +569,7 @@ export default function App() {
             <div className="text-gray-500 mt-2">{day.note}</div>
           </div>
         ) : (
-          day.groups.map((g, gi) => (
+          day.groups.map((g: ExerciseGroup, gi: number) => (
             <div key={gi} className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
               {/* Group Header */}
               <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
@@ -558,7 +584,7 @@ export default function App() {
 
               {/* Exercise Pairs */}
               <div className="divide-y divide-gray-800">
-                {g.pairs.map((pair, pi) => {
+                {g.pairs.map((pair: ExercisePair, pi: number) => {
                   const keyA = `${activeDay}-${gi}-${pi}-A`;
                   const keyB = `${activeDay}-${gi}-${pi}-B`;
                   const prevWeekData = allWeeks[getPreviousWeekId(selectedWeek)];
@@ -633,7 +659,7 @@ export default function App() {
                 { rpe: "RPE 8", color: "bg-yellow-500", desc: "2 reps left — most working sets" },
                 { rpe: "RPE 9", color: "bg-orange-500", desc: "1 rep left — last set only" },
                 { rpe: "RPE 10", color: "bg-red-500", desc: "Failure — isolation only, never compound" },
-              ].map(r => (
+              ].map((r: { rpe: string; color: string; desc: string }) => (
                 <div key={r.rpe} className="flex items-center gap-3">
                   <div className={`w-2 h-2 rounded-full flex-shrink-0 ${r.color}`} />
                   <span className="text-white text-xs font-bold w-14">{r.rpe}</span>
