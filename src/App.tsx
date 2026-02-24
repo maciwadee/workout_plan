@@ -462,7 +462,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-950 text-white font-sans">
       <div className="max-w-2xl mx-auto min-h-screen flex flex-col">
       {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-800 px-4 py-4 flex-shrink-0">
+      <div className="bg-gray-900 border border-gray-800 px-4 py-3 flex-shrink-0 rounded-2xl mx-3 mt-3">
         <h1 className="text-xl font-bold text-center text-white">💪 Workout Tracker</h1>
         <p className="text-center text-gray-400 text-sm mt-1">5-Day | 3 Muscle Groups/Day | Superset + RPE</p>
         <div className="flex flex-wrap items-center justify-center gap-2 mt-3">
@@ -487,7 +487,7 @@ export default function App() {
       </div>
 
       {/* Week Selector */}
-      <div className="flex items-center justify-between gap-2 px-4 py-3 bg-gray-900 border-b border-gray-800">
+      <div className="flex items-center justify-between gap-2 px-4 py-2 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3">
         <button
           type="button"
           onClick={() => setSelectedWeek(previousWeekId)}
@@ -513,7 +513,7 @@ export default function App() {
       </div>
 
       {/* Day Selector */}
-      <div className="flex overflow-x-auto gap-2 px-3 py-3 bg-gray-900 border-b border-gray-800">
+      <div className="flex overflow-x-auto gap-2 px-3 py-2 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3">
         {days.map((d: string) => {
           const isRest = plan[d].groups.length === 0;
           return (
@@ -535,7 +535,7 @@ export default function App() {
       </div>
 
       {/* Day Header */}
-      <div className="px-4 py-4 bg-gray-900 border-b border-gray-800 flex-shrink-0">
+      <div className="px-4 py-3 bg-gray-900 border border-gray-800 flex-shrink-0 rounded-2xl mx-3 mt-3">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="text-2xl">{day.emoji}</div>
@@ -711,9 +711,9 @@ export default function App() {
                       
                       let instructionNote = "";
                       if (isHIIT) {
-                        instructionNote = `HIIT — 30s at 85–95% HRmax / 60s at 50–60% HRmax × 8–10 rounds`;
+                        instructionNote = `HIIT — 8–10 × 30s (50% HRmax) & 60s (95% HRmax)`;
                       } else if (isLISS) {
-                        instructionNote = `LISS — ${duration}' at 60–70% HRmax continuous`;
+                        instructionNote = `LISS — ${duration}' at 60-70% HRmax continuous`;
                       } else {
                         instructionNote = cardioType;
                       }
