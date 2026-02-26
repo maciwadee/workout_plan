@@ -117,7 +117,7 @@ const plan: PlanType = {
         sets: 2,
         rpe: "RPE 8",
         pairs: [
-          { a: "Cable Fly", b: "Lat Pulldown", reps: "12–15", rest: "45s after pair" },
+          { a: "Cable Fly (mid-chest)", b: "Lat Pulldown", reps: "12–15", rest: "45s after pair" },
         ]
       },
       {
@@ -137,29 +137,29 @@ const plan: PlanType = {
     sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio HIIT 30')"],
     groups: [
       {
-        name: "COMPOUND — Shoulders",
+        name: "SUPERSET A — Shoulders / Biceps (compound)",
         sets: 3,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Overhead Press", b: "—", reps: "8–10", rest: "90s" },
+          { a: "Overhead Press", b: "Barbell Curl", reps: "8–10 / 8–10", rest: "90s after pair" },
         ]
       },
       {
-        name: "SUPERSET A — Shoulders / Biceps",
+        name: "SUPERSET B — Shoulders / Biceps",
         sets: 2,
         rpe: "RPE 8",
         pairs: [
-          { a: "Lateral Raise", b: "Barbell Curl", reps: "12–15", rest: "45s after pair" },
-          { a: "Rear Delt Fly", b: "Hammer Curl", reps: "12–15", rest: "45s after pair" },
+          { a: "Lateral Raise", b: "Hammer Curl", reps: "12–15", rest: "45s after pair" },
+          { a: "Rear Delt Fly", b: "Cable Curl", reps: "12–15", rest: "45s after pair" },
         ]
       },
       {
-        name: "SUPERSET B — Triceps / Biceps",
+        name: "SUPERSET C — Triceps / Biceps",
         sets: 2,
         rpe: "RPE 8–9",
         pairs: [
           { a: "Tricep Pushdown", b: "Incline DB Curl", reps: "12–15", rest: "45s after pair" },
-          { a: "Skull Crusher", b: "Cable Curl", reps: "10–12", rest: "45s after pair" },
+          { a: "Skull Crusher", b: "—", reps: "10–12", rest: "45s" },
         ]
       }
     ]
@@ -191,7 +191,7 @@ const plan: PlanType = {
         sets: 2,
         rpe: "RPE 8–9",
         pairs: [
-          { a: "Leg Curl", b: "Hip Thrust", reps: "12–15", rest: "45s after pair" },
+          { a: "Lying Leg Curl (face down)", b: "Hip Thrust", reps: "12–15", rest: "45s after pair" },
         ]
       },
       {
@@ -199,47 +199,76 @@ const plan: PlanType = {
         sets: 3,
         rpe: "RPE 9",
         pairs: [
-          { a: "Standing Calf Raise", b: "Seated Calf Raise", reps: "15–20", rest: "30s after pair" },
+          { a: "Standing Calf Raise", b: "—", reps: "15–20", rest: "30s" },
+          { a: "Seated Calf Raise", b: "—", reps: "15–20", rest: "30s" },
         ]
       }
     ]
   },
   "Thursday": {
-    label: "REST DAY",
-    emoji: "😴",
-    note: "Full recovery — muscles grow today, not in the gym",
-    sessions: ["Light walk 20–30' if desired"],
-    groups: []
-  },
-  "Friday": {
     label: "Chest + Shoulders + Triceps",
     emoji: "🫁💪",
-    note: "Push day — all pressing muscles together, high intensity",
+    note: "Push day — supersets where muscles don't overlap to save time",
     sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio HIIT 30')"],
     groups: [
       {
-        name: "SUPERSET A — Chest / Shoulders",
+        name: "SUPERSET A — Chest / Side Delt + OHP / Core",
         sets: 3,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Incline Bench Press", b: "Overhead Press", reps: "8–10", rest: "60s after pair" },
+          { a: "Incline Bench Press", b: "Lateral Raise", reps: "8–10 / 12–15", rest: "60s after pair" },
+          { a: "Overhead Press", b: "Plank (30–45s)", reps: "8–10 / 30–45s", rest: "60s after pair" },
         ]
       },
       {
-        name: "SUPERSET B — Chest / Shoulders Isolation",
+        name: "SUPERSET B — Chest Isolation / Front Delt + Dips / Core",
         sets: 2,
         rpe: "RPE 8",
         pairs: [
-          { a: "Pec Deck / Cable Fly", b: "Lateral Raise", reps: "12–15", rest: "45s after pair" },
-          { a: "Dips", b: "Front Raise", reps: "10–12", rest: "45s after pair" },
+          { a: "Pec Deck / Cable Fly (mid-chest)", b: "Front Raise", reps: "12–15 / 10–12", rest: "45s after pair" },
+          { a: "Dips", b: "Dead Bug (10 per side)", reps: "10–12 / 10 per side", rest: "45s after pair" },
         ]
       },
       {
-        name: "SUPERSET C — Triceps (drop set last set)",
+        name: "STRAIGHT SETS — Triceps (drop set last set)",
         sets: 2,
         rpe: "RPE 8→9",
         pairs: [
-          { a: "Overhead Tricep Ext.", b: "Tricep Pushdown", reps: "10–12 → drop → failure", rest: "45s after pair" },
+          { a: "Overhead Tricep Ext.", b: "—", reps: "10–12 → drop → failure", rest: "45s" },
+          { a: "Tricep Pushdown", b: "—", reps: "10–12 → drop → failure", rest: "45s" },
+        ]
+      }
+    ]
+  },
+  "Friday": {
+    label: "Back + Biceps + Rear Delt",
+    emoji: "🔙💪",
+    note: "Pull day at gym — all pulling muscles, superset for max pump",
+    sessions: ["Gym 50–60'", "Evening 6–7pm (Cardio LISS 45') optional"],
+    groups: [
+      {
+        name: "SUPERSET — Back Compound + Core",
+        sets: 3,
+        rpe: "RPE 7–8",
+        pairs: [
+          { a: "Deadlift / Rack Pull", b: "Plank (30–45s)", reps: "6–8 / 30–45s", rest: "120s after pair" },
+        ]
+      },
+      {
+        name: "SUPERSET A — Back / Biceps",
+        sets: 3,
+        rpe: "RPE 8",
+        pairs: [
+          { a: "Pull-up / Lat Pulldown", b: "Barbell Curl", reps: "8–10", rest: "60s after pair" },
+          { a: "Cable Row", b: "Hammer Curl", reps: "10–12", rest: "45s after pair" },
+        ]
+      },
+      {
+        name: "SUPERSET B — Rear Delt / Biceps Isolation",
+        sets: 2,
+        rpe: "RPE 8–9",
+        pairs: [
+          { a: "Face Pull", b: "Incline DB Curl", reps: "15–20", rest: "45s after pair" },
         ]
       }
     ]
@@ -277,37 +306,11 @@ const plan: PlanType = {
     ]
   },
   "Sunday": {
-    label: "Back + Biceps + Rear Delt",
-    emoji: "🔙💪",
-    note: "Pull day at gym — all pulling muscles, superset for max pump",
-    sessions: ["Gym 50–60'", "Evening 6–7pm (Cardio LISS 45') optional"],
-    groups: [
-      {
-        name: "COMPOUND — Back",
-        sets: 3,
-        rpe: "RPE 7–8",
-        pairs: [
-          { a: "Deadlift / Rack Pull", b: "—", reps: "6–8", rest: "120s" },
-        ]
-      },
-      {
-        name: "SUPERSET A — Back / Biceps",
-        sets: 3,
-        rpe: "RPE 8",
-        pairs: [
-          { a: "Pull-up / Lat Pulldown", b: "Barbell Curl", reps: "8–10", rest: "60s after pair" },
-          { a: "Cable Row", b: "Hammer Curl", reps: "10–12", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "SUPERSET B — Rear Delt / Biceps Isolation",
-        sets: 2,
-        rpe: "RPE 8–9",
-        pairs: [
-          { a: "Face Pull", b: "Incline DB Curl", reps: "15–20", rest: "45s after pair" },
-        ]
-      }
-    ]
+    label: "REST DAY",
+    emoji: "😴",
+    note: "Full recovery — muscles grow today, not in the gym",
+    sessions: ["Light walk 20–30' if desired"],
+    groups: []
   }
 };
 
@@ -330,7 +333,7 @@ function buildKeyToExerciseName(): Record<string, string> {
     plan[day].groups.forEach((g: ExerciseGroup, gi: number) => {
       g.pairs.forEach((pair: ExercisePair, pi: number) => {
         map[`${day}-${gi}-${pi}-A`] = pair.a;
-        if (pair.b !== "—") map[`${day}-${gi}-${pi}-B`] = pair.b;
+        if (hasSecondExercise(pair)) map[`${day}-${gi}-${pi}-B`] = pair.b;
       });
     });
   });
@@ -363,7 +366,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   lines.push("");
   lines.push(`Export date: ${new Date().toISOString().slice(0, 10)}`);
   lines.push("");
-  lines.push("Plan: 5-day split — Mon Chest+Back+Abs, Tue Shoulders+Arms, Wed Legs+Glutes+Calves, Thu Rest, Fri Chest+Shoulders+Triceps, Sat Back+Biceps+Rear Delt, Sun Active recovery.");
+  lines.push("Plan: 5-day split — Mon Chest+Back+Abs, Tue Shoulders+Arms, Wed Legs+Glutes+Calves, Thu Push, Fri Pull, Sat Tennis+home, Sun Rest.");
   lines.push("");
   const weekIds = Object.keys(allWeeks).sort().reverse().slice(0, 8);
   weekIds.forEach((weekId: string) => {
@@ -382,7 +385,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
           const doneA = w.checked?.[keyA];
           const wtA = w.weights?.[keyA];
           items.push(`${pair.a} ${wtA ?? "—"} kg ${doneA ? "done" : "—"}`);
-          if (pair.b !== "—") {
+          if (hasSecondExercise(pair)) {
             const doneB = w.checked?.[keyB];
             const wtB = w.weights?.[keyB];
             items.push(`${pair.b} ${wtB ?? "—"} kg ${doneB ? "done" : "—"}`);
@@ -403,6 +406,31 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   return lines.join("\n");
 }
 
+/** True if this pair has a second exercise (superset); false for straight set (b is dash or empty). */
+function hasSecondExercise(pair: ExercisePair): boolean {
+  const b = (pair.b ?? "").trim();
+  return b.length > 0 && b !== "—" && b !== "–" && b !== "-";
+}
+
+function isDayComplete(weekData: WeekData, d: string): boolean {
+  const groups = plan[d].groups;
+  if (groups.length === 0) return false;
+  const checked = weekData?.checked ?? {};
+  for (let gi = 0; gi < groups.length; gi++) {
+    const g = groups[gi];
+    for (let pi = 0; pi < g.pairs.length; pi++) {
+      const pair = g.pairs[pi];
+      const keyA = `${d}-${gi}-${pi}-A`;
+      if (!checked[keyA]) return false;
+      if (hasSecondExercise(pair)) {
+        const keyB = `${d}-${gi}-${pi}-B`;
+        if (!checked[keyB]) return false;
+      }
+    }
+  }
+  return true;
+}
+
 function buildJsonReport(allWeeks: Record<string, WeekData>): string {
   const weekIds = Object.keys(allWeeks).sort().reverse();
   const weeks: Record<string, { checked: Record<string, boolean>; weights: Record<string, string>; label: string }> = {};
@@ -420,6 +448,8 @@ export default function App() {
   const [allWeeks, setAllWeeks] = useState<Record<string, WeekData>>(() => loadAllWeeks());
   const [activeDay, setActiveDay] = useState(() => getTodayDayName());
   const [copied, setCopied] = useState<"markdown" | "json" | null>(null);
+  const [showImportUI, setShowImportUI] = useState(false);
+  const [importMessage, setImportMessage] = useState<string | null>(null);
 
   const copyReport = (format: "markdown" | "json") => {
     const text = format === "markdown" ? buildMarkdownReport(allWeeks) : buildJsonReport(allWeeks);
@@ -480,10 +510,76 @@ export default function App() {
           >
             Copy as JSON
           </button>
+          <button
+            type="button"
+            onClick={() => { setShowImportUI(true); setImportMessage(null); }}
+            className="px-3 py-1.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium"
+          >
+            Import JSON
+          </button>
           {copied && (
             <span className="text-green-400 text-sm">Copied to clipboard</span>
           )}
+          {importMessage && (
+            <span className={importMessage.startsWith("Invalid") ? "text-red-400 text-sm" : "text-green-400 text-sm"}>
+              {importMessage}
+            </span>
+          )}
         </div>
+        {showImportUI && (
+          <div className="mt-3 pt-3 border-t border-gray-700">
+            <textarea
+              placeholder="Paste JSON from Copy as JSON here"
+              className="w-full min-h-[120px] px-3 py-2 rounded-lg bg-gray-800 border border-gray-600 text-gray-200 text-sm font-mono placeholder-gray-500 resize-y"
+              id="import-json-textarea"
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById("import-json-textarea") as HTMLTextAreaElement;
+                  if (!el) return;
+                  try {
+                    const data = JSON.parse(el.value);
+                    if (!data || typeof data.weeks !== "object") {
+                      setImportMessage("Invalid data");
+                      return;
+                    }
+                    const normalized: Record<string, WeekData> = {};
+                    Object.entries(data.weeks).forEach(([weekId, w]: [string, unknown]) => {
+                      const row = w as { checked?: Record<string, boolean>; weights?: Record<string, string> };
+                      normalized[weekId] = {
+                        checked: row?.checked ?? {},
+                        weights: row?.weights ?? {}
+                      };
+                    });
+                    setAllWeeks((prev) => {
+                      const next = { ...prev, ...normalized };
+                      saveAllWeeks(next);
+                      return next;
+                    });
+                    setShowImportUI(false);
+                    setImportMessage("Imported successfully");
+                    setTimeout(() => setImportMessage(null), 2000);
+                    el.value = "";
+                  } catch {
+                    setImportMessage("Invalid data");
+                  }
+                }}
+                className="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium"
+              >
+                Import
+              </button>
+              <button
+                type="button"
+                onClick={() => { setShowImportUI(false); setImportMessage(null); }}
+                className="px-3 py-1.5 rounded-lg bg-gray-600 hover:bg-gray-500 text-gray-200 text-sm font-medium"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Week Selector */}
@@ -512,22 +608,28 @@ export default function App() {
         </button>
       </div>
 
-      {/* Day Selector */}
+      {/* Day Selector — completed days: green shade (stays green when selected) */}
       <div className="flex overflow-x-auto gap-2 px-3 py-2 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3">
         {days.map((d: string) => {
           const isRest = plan[d].groups.length === 0;
           const isActive = activeDay === d;
+          const dayComplete = !isRest && isDayComplete(weekData, d);
+          const showGreen = dayComplete;
           return (
             <button
               key={d}
+              type="button"
               onClick={() => setActiveDay(d)}
               className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm font-semibold transition-all border-2 ${
-                isActive
-                  ? "bg-gray-800 text-white ring"
+                showGreen
+                  ? "text-gray-200 border-green-800 " + (isActive ? "ring ring-green-500" : "")
                   : isRest
                   ? "bg-gray-800 text-gray-500 border-gray-700"
-                  : "bg-gray-800 text-gray-300 hover:bg-gray-700 border-gray-700"
+                  : isActive
+                  ? "bg-gray-800 text-white border-gray-700 ring"
+                  : "bg-gray-800 text-gray-300 border-gray-700 hover:bg-gray-700"
               }`}
+              style={showGreen ? { backgroundColor: "rgba(20, 83, 45, 0.38)" } : undefined}
             >
               {d.slice(0,3)}
             </button>
@@ -608,7 +710,7 @@ export default function App() {
                     const prevWeekData = allWeeks[getPreviousWeekId(selectedWeek)];
                     const lastWeightA = prevWeekData?.weights?.[keyA];
                     const lastWeightB = prevWeekData?.weights?.[keyB];
-                    const setLabel = pair.b !== "—" ? "⚡ Superset" : "🏋️ Straight Set";
+                    const setLabel = hasSecondExercise(pair) ? "⚡ Superset" : "🏋️ Straight Set";
                     return (
                       <div key={pi} className="px-4 py-3">
                         <p className="text-xs text-gray-500 mb-2 flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
@@ -622,7 +724,7 @@ export default function App() {
                           </button>
                           <div className="flex-1 min-w-0 flex flex-col justify-center">
                             <div className={`font-semibold text-sm truncate ${checked[keyA] ? "line-through text-gray-500" : "text-white"}`} title={pair.a}>
-                              {pair.b !== "—" ? "A: " : ""}{pair.a}
+                              {hasSecondExercise(pair) ? "A: " : ""}{pair.a}
                             </div>
                             {lastWeightA != null && lastWeightA !== "" && (
                               <div className="text-xs text-gray-500 mt-0.5">Last: {lastWeightA} kg</div>
@@ -637,7 +739,7 @@ export default function App() {
                           />
                         </div>
                         {/* Exercise B */}
-                        {pair.b !== "—" && (
+                        {hasSecondExercise(pair) && (
                           <div className={`flex items-center gap-3 p-2 rounded-lg ${checked[keyB] ? "bg-green-900/30" : "bg-gray-800"}`}>
                             <button onClick={() => toggleCheck(keyB)} className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${checked[keyB] ? "bg-green-500 border-green-500" : "border-gray-600"}`}>
                               {checked[keyB] && <span className="text-white text-xs">✓</span>}
