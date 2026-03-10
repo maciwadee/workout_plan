@@ -881,7 +881,7 @@ export default function App() {
             onClick={() => setActiveTab("workout")}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium border-2 transition-all ${
               activeTab === "workout"
-                ? "text-white border-orange-400 ring ring-orange-400/60 bg-gray-900"
+                ? "text-white border-gray-700 ring bg-gray-800"
                 : "text-gray-300 border-gray-700 bg-gray-900 hover:bg-gray-800"
             }`}
           >
@@ -892,7 +892,7 @@ export default function App() {
             onClick={() => setActiveTab("progress")}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium border-2 transition-all ${
               activeTab === "progress"
-                ? "text-white border-teal-400 ring ring-teal-400/60 bg-gray-900"
+                ? "text-white border-gray-700 ring bg-gray-800"
                 : "text-gray-300 border-gray-700 bg-gray-900 hover:bg-gray-800"
             }`}
           >
