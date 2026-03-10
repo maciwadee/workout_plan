@@ -591,7 +591,10 @@ function isDayComplete(weekData: WeekData, d: string): boolean {
   return true;
 }
 
-function buildJsonReport(allWeeks: Record<string, WeekData>): string {
+function buildJsonReport(
+  allWeeks: Record<string, WeekData>,
+  progress: ProgressByWeek
+): string {
   const weekIds = Object.keys(allWeeks).sort().reverse();
   const weeks: Record<string, { checked: Record<string, boolean>; weights: Record<string, string>; label: string }> = {};
   weekIds.forEach((weekId: string) => {
@@ -599,7 +602,7 @@ function buildJsonReport(allWeeks: Record<string, WeekData>): string {
     if (w) weeks[weekId] = { ...w, label: getWeekLabel(weekId) };
   });
   const exerciseHistory = buildExerciseHistory(allWeeks);
-  return JSON.stringify({ weeks, exerciseHistory }, null, 2);
+  return JSON.stringify({ weeks, exerciseHistory, progressByWeek: progress }, null, 2);
 }
 
 function buildWeeklySummary(
@@ -664,19 +667,21 @@ function buildDailySummary(
 }
 
 function getDailyAdvice(daily: DailySummary, weekly: WeeklySummary): string {
+  const parts: string[] = [];
+
   // 1) Missed training day
   if (daily.isTrainingDay && !daily.workoutCompleted) {
-    return "Priority today: finish your planned workout to stay on track.";
+    parts.push("Finish your planned workout today to stay on track.");
   }
 
   // 2) Very low sleep
   if (daily.sleepHours != null && daily.sleepHours < 6.5) {
-    return "Go to bed 30–60 minutes earlier tonight to recover better.";
+    parts.push("Go to bed 30–60 minutes earlier tonight for better recovery.");
   }
 
   // 3) Low steps
   if (daily.steps != null && daily.steps < 6000) {
-    return "Add a 20–30 minute walk to reach at least 7–8k steps today.";
+    parts.push("Add a 20–30 minute walk to reach at least 7–8k steps.");
   }
 
   // 4) Weight flat but waist not shrinking
@@ -688,11 +693,14 @@ function getDailyAdvice(daily: DailySummary, weekly: WeeklySummary): string {
     weekly.prevWaistCm != null &&
     weekly.waistCm >= weekly.prevWaistCm
   ) {
-    return "Tighten calories slightly and keep protein high to restart waist loss.";
+    parts.push("Tighten calories slightly and keep protein high to restart waist loss.");
   }
 
-  // 5) Everything roughly on track
-  return "You are on track—keep hitting workouts, 8k steps, and 7–8 hours of sleep.";
+  if (parts.length === 0) {
+    return "You are on track—keep hitting workouts, 8k steps, and 7–8 hours of sleep.";
+  }
+
+  return parts.join(" ");
 }
 
 export default function App() {
@@ -764,7 +772,10 @@ export default function App() {
   }, [fitbitConnected]);
 
   const copyReport = (format: "markdown" | "json") => {
-    const text = format === "markdown" ? buildMarkdownReport(allWeeks) : buildJsonReport(allWeeks);
+    const text =
+      format === "markdown"
+        ? buildMarkdownReport(allWeeks)
+        : buildJsonReport(allWeeks, progressByWeek);
     navigator.clipboard.writeText(text).then(() => {
       setCopied(format);
       setTimeout(() => setCopied(null), 2000);
@@ -939,6 +950,14 @@ export default function App() {
                       saveAllWeeks(next);
                       return next;
                     });
+                    if (data.progressByWeek && typeof data.progressByWeek === "object") {
+                      const importedProgress = data.progressByWeek as ProgressByWeek;
+                      setProgressByWeek((prev) => {
+                        const next = { ...prev, ...importedProgress };
+                        saveProgressByWeek(next);
+                        return next;
+                      });
+                    }
                     setShowImportUI(false);
                     setImportMessage("Imported successfully");
                     setTimeout(() => setImportMessage(null), 2000);
