@@ -43,14 +43,6 @@ function getStoredFitbitTokenDetails(): StoredFitbitTokens | null {
   }
 }
 
-function getTodayIsoDate(): string {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 function getMondayOfWeek(d: Date): Date {
   const d2 = new Date(d);
   const day = d2.getDay();
@@ -98,6 +90,23 @@ function getNextWeekId(weekId: string): string {
   return `${year}-W${String(week + 1).padStart(2, "0")}`;
 }
 
+function getIsoDateForWeekAndDay(weekId: string, dayName: string): string {
+  const { year, week } = parseWeekId(weekId);
+  const jan4 = new Date(year, 0, 4);
+  const startMonday = getMondayOfWeek(jan4);
+  const monday = new Date(startMonday);
+  monday.setDate(startMonday.getDate() + (week - 1) * 7);
+
+  const dayIndex = days.indexOf(dayName);
+  const date = new Date(monday);
+  date.setDate(monday.getDate() + (dayIndex >= 0 ? dayIndex : 0));
+
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 type WeekData = { checked: Record<string, boolean>; weights: Record<string, string> };
 
 type DailyFitbitData = {
@@ -126,6 +135,7 @@ type ProgressWeek = {
   weekId: string;
   daily: Record<string, DailyManualData>;
   measurements?: WeeklyBodyMeasurements;
+  fitbitDaily?: Record<string, DailyFitbitData>;
 };
 
 type ProgressByWeek = Record<string, ProgressWeek>;
@@ -742,7 +752,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!fitbitConnected) {
+    if (!fitbitConnected || activeTab !== "progress") {
       setFitbitDaily(null);
       setFitbitStatus(null);
       return;
@@ -753,7 +763,16 @@ export default function App() {
       setFitbitDaily(null);
       return;
     }
-    const dateIso = getTodayIsoDate();
+    const dateIso = getIsoDateForWeekAndDay(selectedWeek, activeDay);
+
+    // Use cached Fitbit data for this week/day if available
+    const cached = progressByWeek[selectedWeek]?.fitbitDaily?.[dateIso];
+    if (cached) {
+      setFitbitDaily(cached);
+      setFitbitStatus(null);
+      return;
+    }
+
     setFitbitStatus("Loading Fitbit data…");
     fetchFitbitDailyData(dateIso, tokenDetails.access_token)
       .then((data) => {
@@ -763,13 +782,27 @@ export default function App() {
         } else {
           setFitbitDaily(data);
           setFitbitStatus(null);
+          setProgressByWeek((prev) => {
+            const base: ProgressWeek = prev[selectedWeek] ?? {
+              weekId: selectedWeek,
+              daily: {},
+            };
+            const existingFitbit = base.fitbitDaily ?? {};
+            base.fitbitDaily = {
+              ...existingFitbit,
+              [dateIso]: data,
+            };
+            const next = { ...prev, [selectedWeek]: { ...base } };
+            saveProgressByWeek(next);
+            return next;
+          });
         }
       })
       .catch(() => {
         setFitbitStatus("Could not load Fitbit data.");
         setFitbitDaily(null);
       });
-  }, [fitbitConnected]);
+  }, [fitbitConnected, activeTab, selectedWeek, activeDay, progressByWeek]);
 
   const copyReport = (format: "markdown" | "json") => {
     const text =
@@ -798,13 +831,12 @@ export default function App() {
     []
   );
 
-  const todayIso = getTodayIsoDate();
-  const currentDayName = getTodayDayName();
+  const progressDateIso = getIsoDateForWeekAndDay(selectedWeek, activeDay);
   const weeklySummary = buildWeeklySummary(selectedWeek, progressByWeek);
   const dailySummary = buildDailySummary(
-    todayIso,
+    progressDateIso,
     selectedWeek,
-    currentDayName,
+    activeDay,
     weekData,
     progressByWeek,
     fitbitDaily
@@ -982,8 +1014,6 @@ export default function App() {
         )}
       </div>
 
-      {activeTab === "workout" && (
-      <>
       {/* Week Selector */}
       <div className="flex items-center justify-between gap-2 px-4 py-2 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3">
         <button
@@ -1070,6 +1100,7 @@ export default function App() {
       </div>
 
       {/* Workout Groups */}
+      {activeTab === "workout" && (
       <div className="px-4 py-4 space-y-6 flex-1">
         {day.groups.length === 0 ? (
           <div className="py-10">
@@ -1280,7 +1311,6 @@ export default function App() {
           </div>
         )}
       </div>
-      </>
       )}
       {activeTab === "progress" && (
         <div className="px-4 py-3 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3 mb-4 flex-1 flex flex-col gap-3">
@@ -1322,7 +1352,7 @@ export default function App() {
                   <input
                     type="number"
                     className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-right text-xs"
-                    value={progressByWeek[selectedWeek]?.daily?.[todayIso]?.weight ?? ""}
+                    value={progressByWeek[selectedWeek]?.daily?.[progressDateIso]?.weight ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
                       persistProgressWeek(selectedWeek, (prev) => {
@@ -1330,11 +1360,11 @@ export default function App() {
                           weekId: selectedWeek,
                           daily: {},
                         };
-                        const existing = base.daily[todayIso] ?? { date: todayIso };
+                        const existing = base.daily[progressDateIso] ?? { date: progressDateIso };
                         const weight = val === "" ? undefined : Number(val);
-                        base.daily[todayIso] = {
+                        base.daily[progressDateIso] = {
                           ...existing,
-                          date: todayIso,
+                          date: progressDateIso,
                           weight: Number.isNaN(weight) ? undefined : weight,
                         };
                         return { ...base };
@@ -1347,7 +1377,7 @@ export default function App() {
                   <input
                     type="number"
                     className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-right text-xs"
-                    value={progressByWeek[selectedWeek]?.daily?.[todayIso]?.calories ?? ""}
+                    value={progressByWeek[selectedWeek]?.daily?.[progressDateIso]?.calories ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
                       persistProgressWeek(selectedWeek, (prev) => {
@@ -1355,11 +1385,11 @@ export default function App() {
                           weekId: selectedWeek,
                           daily: {},
                         };
-                        const existing = base.daily[todayIso] ?? { date: todayIso };
+                        const existing = base.daily[progressDateIso] ?? { date: progressDateIso };
                         const calories = val === "" ? undefined : Number(val);
-                        base.daily[todayIso] = {
+                        base.daily[progressDateIso] = {
                           ...existing,
-                          date: todayIso,
+                          date: progressDateIso,
                           calories: Number.isNaN(calories) ? undefined : calories,
                         };
                         return { ...base };
@@ -1372,7 +1402,7 @@ export default function App() {
                   <input
                     type="number"
                     className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-right text-xs"
-                    value={progressByWeek[selectedWeek]?.daily?.[todayIso]?.protein ?? ""}
+                    value={progressByWeek[selectedWeek]?.daily?.[progressDateIso]?.protein ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
                       persistProgressWeek(selectedWeek, (prev) => {
@@ -1380,11 +1410,11 @@ export default function App() {
                           weekId: selectedWeek,
                           daily: {},
                         };
-                        const existing = base.daily[todayIso] ?? { date: todayIso };
+                        const existing = base.daily[progressDateIso] ?? { date: progressDateIso };
                         const protein = val === "" ? undefined : Number(val);
-                        base.daily[todayIso] = {
+                        base.daily[progressDateIso] = {
                           ...existing,
-                          date: todayIso,
+                          date: progressDateIso,
                           protein: Number.isNaN(protein) ? undefined : protein,
                         };
                         return { ...base };
