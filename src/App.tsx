@@ -879,10 +879,10 @@ export default function App() {
           <button
             type="button"
             onClick={() => setActiveTab("workout")}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium border-2 transition-all ${
               activeTab === "workout"
-                ? "bg-orange-600 text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                ? "text-white border-orange-400 ring ring-orange-400/60 bg-gray-900"
+                : "text-gray-300 border-gray-700 bg-gray-900 hover:bg-gray-800"
             }`}
           >
             Workout
@@ -890,10 +890,10 @@ export default function App() {
           <button
             type="button"
             onClick={() => setActiveTab("progress")}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium border-2 transition-all ${
               activeTab === "progress"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                ? "text-white border-teal-400 ring ring-teal-400/60 bg-gray-900"
+                : "text-gray-300 border-gray-700 bg-gray-900 hover:bg-gray-800"
             }`}
           >
             Progress
@@ -1069,35 +1069,37 @@ export default function App() {
         })}
       </div>
 
-      {/* Day Header */}
-      <div className="px-4 py-3 bg-gray-900 border border-gray-800 flex-shrink-0 rounded-2xl mx-3 mt-3">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <div className="text-2xl">{day.emoji}</div>
-            <div className="text-lg font-bold mt-1">{activeDay}</div>
-            <div className="text-orange-400 font-semibold text-sm">{day.label}</div>
-          </div>
-          {day.groups.length > 0 && (
-            <div className="text-right flex-shrink-0 pl-4 border-l border-gray-700">
-              <div className="text-2xl font-bold text-orange-400">{totalSets}</div>
-              <div className="text-gray-400 text-xs">total sets</div>
+      {/* Day Header (Workout tab only) */}
+      {activeTab === "workout" && (
+        <div className="px-4 py-3 bg-gray-900 border border-gray-800 flex-shrink-0 rounded-2xl mx-3 mt-3">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="text-2xl">{day.emoji}</div>
+              <div className="text-lg font-bold mt-1">{activeDay}</div>
+              <div className="text-orange-400 font-semibold text-sm">{day.label}</div>
             </div>
-          )}
+            {day.groups.length > 0 && (
+              <div className="text-right flex-shrink-0 pl-4 border-l border-gray-700">
+                <div className="text-2xl font-bold text-orange-400">{totalSets}</div>
+                <div className="text-gray-400 text-xs">total sets</div>
+              </div>
+            )}
+          </div>
+          <p className="mt-3 text-gray-400 text-sm italic flex items-baseline gap-1.5">
+            <span className="text-gray-500 flex-shrink-0" aria-hidden>•</span>
+            <span>💡 {day.note}</span>
+          </p>
+          <ul className="mt-3 flex flex-wrap gap-2 list-none pl-0">
+            {day.sessions.map((s: string, i: number) => (
+              <li key={i}>
+                <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
+                  ⏰ {s}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <p className="mt-3 text-gray-400 text-sm italic flex items-baseline gap-1.5">
-          <span className="text-gray-500 flex-shrink-0" aria-hidden>•</span>
-          <span>💡 {day.note}</span>
-        </p>
-        <ul className="mt-3 flex flex-wrap gap-2 list-none pl-0">
-          {day.sessions.map((s: string, i: number) => (
-            <li key={i}>
-              <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
-                ⏰ {s}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
 
       {/* Workout Groups */}
       {activeTab === "workout" && (
