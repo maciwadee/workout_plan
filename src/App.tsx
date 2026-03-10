@@ -218,66 +218,26 @@ async function fetchFitbitDailyData(
 ): Promise<DailyFitbitData | null> {
   if (!accessToken) return null;
   try {
-    const headers: HeadersInit = {
-      Authorization: `Bearer ${accessToken}`,
+    const res = await fetch(`/api/fitbit/summary?date=${encodeURIComponent(dateIso)}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (!res.ok) {
+      return null;
+    }
+    const json = (await res.json()) as {
+      date: string;
+      steps?: number;
+      sleepHours?: number;
+      restingHeartRate?: number;
     };
-
-    // Steps
-    const stepsRes = await fetch(
-      `https://api.fitbit.com/1/user/-/activities/steps/date/${dateIso}/1d.json`,
-      { headers }
-    );
-    let steps: number | undefined;
-    if (stepsRes.ok) {
-      const stepsJson = await stepsRes.json();
-      const arr = stepsJson?.["activities-steps"];
-      if (Array.isArray(arr) && arr[0]?.value) {
-        const v = parseInt(arr[0].value, 10);
-        if (!Number.isNaN(v)) steps = v;
-      }
-    }
-
-    // Sleep
-    const sleepRes = await fetch(
-      `https://api.fitbit.com/1.2/user/-/sleep/date/${dateIso}.json`,
-      { headers }
-    );
-    let sleepHours: number | undefined;
-    let sleepScore: number | null = null;
-    if (sleepRes.ok) {
-      const sleepJson = await sleepRes.json();
-      const records = sleepJson?.sleep;
-      if (Array.isArray(records) && records.length > 0) {
-        const totalMs = records.reduce((acc: number, r: any) => acc + (r.duration ?? 0), 0);
-        if (totalMs > 0) sleepHours = totalMs / (1000 * 60 * 60);
-        if (typeof records[0].efficiency === "number") {
-          // efficiency is 0–100 in many Fitbit responses
-          sleepScore = records[0].efficiency;
-        }
-      }
-    }
-
-    // Resting heart rate
-    const hrRes = await fetch(
-      `https://api.fitbit.com/1/user/-/activities/heart/date/${dateIso}/1d.json`,
-      { headers }
-    );
-    let restingHeartRate: number | undefined;
-    if (hrRes.ok) {
-      const hrJson = await hrRes.json();
-      const arr = hrJson?.["activities-heart"];
-      if (Array.isArray(arr) && arr[0]?.value?.restingHeartRate != null) {
-        const v = Number(arr[0].value.restingHeartRate);
-        if (!Number.isNaN(v)) restingHeartRate = v;
-      }
-    }
-
     return {
-      date: dateIso,
-      steps,
-      sleepHours,
-      restingHeartRate,
-      sleepScore,
+      date: json.date,
+      steps: json.steps,
+      sleepHours: json.sleepHours,
+      restingHeartRate: json.restingHeartRate,
+      sleepScore: null,
     };
   } catch {
     return null;
