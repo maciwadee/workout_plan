@@ -1,6 +1,26 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const STORAGE_KEY = "workout-tracker-v1";
+const FITBIT_STORAGE_KEY = "workout-fitbit-tokens";
+
+function getFitbitAuthUrl(): string {
+  if (typeof window === "undefined") return "/api/fitbit/auth";
+  const base = window.location.origin;
+  return `${base}/api/fitbit/auth`;
+}
+
+function getStoredFitbitTokens(): { access_token: string; expires_in: number } | null {
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(FITBIT_STORAGE_KEY) : null;
+    if (!raw) return null;
+    const data = JSON.parse(raw) as { access_token?: string; expires_at?: number };
+    if (!data?.access_token) return null;
+    if (data.expires_at && Date.now() >= data.expires_at) return null;
+    return { access_token: data.access_token, expires_in: 0 };
+  } catch {
+    return null;
+  }
+}
 
 function getMondayOfWeek(d: Date): Date {
   const d2 = new Date(d);
@@ -100,7 +120,7 @@ const plan: PlanType = {
   "Monday": {
     label: "Chest + Back + Abs",
     emoji: "🫁🔙🔥",
-    note: "Antagonist superset — chest & back never compete",
+    note: "70 sets/week — antagonist supersets to save time",
     sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio LISS 45')"],
     groups: [
       {
@@ -113,8 +133,8 @@ const plan: PlanType = {
         ]
       },
       {
-        name: "SUPERSET B — Chest Isolation / Back Isolation",
-        sets: 2,
+        name: "SUPERSET B — Chest / Back isolation",
+        sets: 3,
         rpe: "RPE 8",
         pairs: [
           { a: "Cable Fly (mid-chest)", b: "Lat Pulldown", reps: "12–15", rest: "45s after pair" },
@@ -122,7 +142,7 @@ const plan: PlanType = {
       },
       {
         name: "CIRCUIT — Abs (no rest between)",
-        sets: 2,
+        sets: 3,
         rpe: "RPE 8–9",
         pairs: [
           { a: "Hanging Leg Raise", b: "Cable Crunch", reps: "15–20", rest: "45s after circuit" },
@@ -131,21 +151,21 @@ const plan: PlanType = {
     ]
   },
   "Tuesday": {
-    label: "Shoulders + Arms + Core",
-    emoji: "💪💪🔥",
-    note: "Shoulders first when fresh, arms benefit from pre-fatigue",
+    label: "Shoulders + Arms",
+    emoji: "💪💪",
+    note: "Supersets: shoulders / biceps / triceps (cross muscle)",
     sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio HIIT 30')"],
     groups: [
       {
-        name: "SUPERSET A — Shoulders / Biceps (compound)",
-        sets: 3,
+        name: "SUPERSET A — Shoulders / Biceps",
+        sets: 4,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Overhead Press", b: "Barbell Curl", reps: "8–10 / 8–10", rest: "90s after pair" },
         ]
       },
       {
-        name: "SUPERSET B — Shoulders / Biceps",
+        name: "SUPERSET B — Delt / Biceps",
         sets: 2,
         rpe: "RPE 8",
         pairs: [
@@ -167,11 +187,11 @@ const plan: PlanType = {
   "Wednesday": {
     label: "Legs + Glutes + Calves",
     emoji: "🦵🍑",
-    note: "Drop set on last set of Squat & RDL for maximum stimulus",
+    note: "Supersets: quad / hamstring / glute; calves finish",
     sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio LISS 45')"],
     groups: [
       {
-        name: "COMPOUND — Quad Dominant",
+        name: "COMPOUND — Quad",
         sets: 3,
         rpe: "RPE 7→9 (last set drop set)",
         pairs: [
@@ -187,7 +207,7 @@ const plan: PlanType = {
         ]
       },
       {
-        name: "SUPERSET B — Hamstring Isolation / Glute",
+        name: "SUPERSET B — Hamstring / Glute",
         sets: 2,
         rpe: "RPE 8–9",
         pairs: [
@@ -196,7 +216,7 @@ const plan: PlanType = {
       },
       {
         name: "FINISHER — Calves (slow eccentric 3s down)",
-        sets: 3,
+        sets: 2,
         rpe: "RPE 9",
         pairs: [
           { a: "Standing Calf Raise", b: "—", reps: "15–20", rest: "30s" },
@@ -208,20 +228,20 @@ const plan: PlanType = {
   "Thursday": {
     label: "Chest + Shoulders + Triceps",
     emoji: "🫁💪",
-    note: "Push day — supersets where muscles don't overlap to save time",
+    note: "Push day — supersets (chest/delt/core) to save time",
     sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio HIIT 30')"],
     groups: [
       {
-        name: "SUPERSET A — Chest / Side Delt + OHP / Core",
-        sets: 3,
+        name: "SUPERSET A — Chest / Side Delt + Core",
+        sets: 2,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Incline Bench Press", b: "Lateral Raise", reps: "8–10 / 12–15", rest: "60s after pair" },
-          { a: "Overhead Press", b: "Plank (30–45s)", reps: "8–10 / 30–45s", rest: "60s after pair" },
+          { a: "Overhead Press", b: "Plank (60s)", reps: "8–10 / 60s", rest: "60s after pair" },
         ]
       },
       {
-        name: "SUPERSET B — Chest Isolation / Front Delt + Dips / Core",
+        name: "SUPERSET B — Chest / Front Delt + Core",
         sets: 2,
         rpe: "RPE 8",
         pairs: [
@@ -230,7 +250,7 @@ const plan: PlanType = {
         ]
       },
       {
-        name: "STRAIGHT SETS — Triceps (drop set last set)",
+        name: "STRAIGHT SETS — Triceps",
         sets: 2,
         rpe: "RPE 8→9",
         pairs: [
@@ -243,15 +263,15 @@ const plan: PlanType = {
   "Friday": {
     label: "Back + Biceps + Rear Delt",
     emoji: "🔙💪",
-    note: "Pull day at gym — all pulling muscles, superset for max pump",
+    note: "Pull day — supersets for max pump",
     sessions: ["Gym 50–60'", "Evening 6–7pm (Cardio LISS 45') optional"],
     groups: [
       {
-        name: "SUPERSET — Back Compound + Core",
+        name: "SUPERSET — Back + Core",
         sets: 3,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Deadlift / Rack Pull", b: "Plank (30–45s)", reps: "6–8 / 30–45s", rest: "120s after pair" },
+          { a: "Deadlift / Rack Pull", b: "Plank (60s)", reps: "6–8 / 60s", rest: "120s after pair" },
         ]
       },
       {
@@ -264,8 +284,8 @@ const plan: PlanType = {
         ]
       },
       {
-        name: "SUPERSET B — Rear Delt / Biceps Isolation",
-        sets: 2,
+        name: "SUPERSET B — Rear Delt / Biceps",
+        sets: 3,
         rpe: "RPE 8–9",
         pairs: [
           { a: "Face Pull", b: "Incline DB Curl", reps: "15–20", rest: "45s after pair" },
@@ -276,12 +296,12 @@ const plan: PlanType = {
   "Saturday": {
     label: "Tennis + Home (no gym)",
     emoji: "🎾🏠",
-    note: "No gym equipment — tennis 2h then optional bodyweight at home",
-    sessions: ["Tennis 2h", "Optional: bodyweight circuit 20–30' at home"],
+    note: "No equipment — bodyweight only after tennis",
+    sessions: ["Tennis 2h (Cardio)", "Optional: bodyweight circuit 20–30' at home"],
     groups: [
       {
         name: "CIRCUIT A — Pull / Push (no equipment)",
-        sets: 2,
+        sets: 3,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Inverted Row (table/bar)", b: "Push-up", reps: "8–12", rest: "45s after pair" },
@@ -289,18 +309,26 @@ const plan: PlanType = {
       },
       {
         name: "CIRCUIT B — Legs / Glutes",
-        sets: 2,
+        sets: 3,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Bodyweight Squat", b: "Glute Bridge", reps: "12–15", rest: "45s after pair" },
         ]
       },
       {
-        name: "CIRCUIT C — Core (no rest between)",
+        name: "CIRCUIT C — Hamstrings / Calves (bodyweight)",
+        sets: 2,
+        rpe: "RPE 7–8",
+        pairs: [
+          { a: "Good Morning (bodyweight)", b: "Standing Calf Raise", reps: "10–12 / 15–20", rest: "45s after pair" },
+        ]
+      },
+      {
+        name: "CIRCUIT D — Core",
         sets: 2,
         rpe: "RPE 8",
         pairs: [
-          { a: "Plank", b: "Dead Bug", reps: "30–45s / 10 per side", rest: "30s after circuit" },
+          { a: "Plank", b: "Dead Bug", reps: "60s / 10 per side", rest: "30s after circuit" },
         ]
       }
     ]
@@ -428,6 +456,10 @@ function isDayComplete(weekData: WeekData, d: string): boolean {
       }
     }
   }
+  const cardioSessions = plan[d].sessions.filter((s: string) => /Cardio|LISS|HIIT/i.test(s));
+  for (let ci = 0; ci < cardioSessions.length; ci++) {
+    if (!checked[`${d}-cardio-${ci}`]) return false;
+  }
   return true;
 }
 
@@ -450,6 +482,31 @@ export default function App() {
   const [copied, setCopied] = useState<"markdown" | "json" | null>(null);
   const [showImportUI, setShowImportUI] = useState(false);
   const [importMessage, setImportMessage] = useState<string | null>(null);
+  const [fitbitConnected, setFitbitConnected] = useState<boolean>(() => !!getStoredFitbitTokens());
+
+  useEffect(() => {
+    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    if (params.get("fitbit_error")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      return;
+    }
+    const access_token = params.get("access_token");
+    const refresh_token = params.get("refresh_token");
+    const expires_in = parseInt(params.get("expires_in") ?? "0", 10);
+    if (access_token) {
+      const expires_at = expires_in ? Date.now() + expires_in * 1000 : 0;
+      try {
+        localStorage.setItem(
+          FITBIT_STORAGE_KEY,
+          JSON.stringify({ access_token, refresh_token, expires_in, expires_at })
+        );
+        setFitbitConnected(true);
+      } catch (_) {}
+    }
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, []);
 
   const copyReport = (format: "markdown" | "json") => {
     const text = format === "markdown" ? buildMarkdownReport(allWeeks) : buildJsonReport(allWeeks);
@@ -517,6 +574,18 @@ export default function App() {
           >
             Import JSON
           </button>
+          {fitbitConnected ? (
+            <span className="px-3 py-1.5 rounded-lg bg-teal-800/60 text-teal-200 text-sm font-medium">
+              Fitbit connected
+            </span>
+          ) : (
+            <a
+              href={getFitbitAuthUrl()}
+              className="px-3 py-1.5 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white text-sm font-medium no-underline"
+            >
+              Connect Fitbit
+            </a>
+          )}
           {copied && (
             <span className="text-green-400 text-sm">Copied to clipboard</span>
           )}
