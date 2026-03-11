@@ -115,9 +115,6 @@ type DailyFitbitData = {
   sleepHours?: number;
   restingHeartRate?: number;
   sleepScore?: number | null;
-  hrvRmssd?: number;
-  hrvDeepRmssd?: number;
-  vo2Max?: number;
 };
 
 type DailyManualData = {
@@ -244,18 +241,12 @@ async function fetchFitbitDailyData(
       steps?: number;
       sleepHours?: number;
       restingHeartRate?: number;
-      hrvRmssd?: number;
-      hrvDeepRmssd?: number;
-      vo2Max?: number;
     };
     return {
       date: json.date,
       steps: json.steps,
       sleepHours: json.sleepHours,
       restingHeartRate: json.restingHeartRate,
-      hrvRmssd: json.hrvRmssd,
-      hrvDeepRmssd: json.hrvDeepRmssd,
-      vo2Max: json.vo2Max,
       sleepScore: null,
     };
   } catch {
@@ -1351,18 +1342,6 @@ export default function App() {
                   <span className="text-gray-400">Resting HR</span>
                   <span className="font-semibold">
                     {fitbitDaily?.restingHeartRate != null ? `${fitbitDaily.restingHeartRate} bpm` : "—"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">HRV</span>
-                  <span className="font-semibold">
-                    {fitbitDaily?.hrvRmssd != null ? `${fitbitDaily.hrvRmssd.toFixed(0)} ms` : "—"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">VO₂ Max</span>
-                  <span className="font-semibold">
-                    {fitbitDaily?.vo2Max != null ? `${fitbitDaily.vo2Max.toFixed(1)} ml/kg/min` : "—"}
                   </span>
                 </div>
               </div>
