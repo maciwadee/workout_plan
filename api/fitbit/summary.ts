@@ -15,10 +15,9 @@ interface DailySummaryResponse {
   steps?: number;
   sleepHours?: number;
   restingHeartRate?: number;
-   deepSleepHours?: number;
-   hrvRmssd?: number;
-   hrvDeepRmssd?: number;
-   vo2Max?: number;
+  hrvRmssd?: number;
+  hrvDeepRmssd?: number;
+  vo2Max?: number;
 }
 
 const FITBIT_API_BASE = "https://api.fitbit.com";
@@ -74,7 +73,6 @@ export default async function handler(
 
     // Sleep
     let sleepHours: number | undefined;
-    let deepSleepHours: number | undefined;
     const sleepRes = await fetch(
       `${FITBIT_API_BASE}/1.2/user/-/sleep/date/${date}.json`,
       { headers }
@@ -84,22 +82,10 @@ export default async function handler(
       const records = json?.sleep;
       if (Array.isArray(records) && records.length > 0) {
         let totalMs = 0;
-        let deepMs = 0;
         records.forEach((r: any) => {
-          const dur = r.duration ?? 0;
-          totalMs += dur;
-          // Some responses have levels array; others have a top-level type
-          if (Array.isArray(r.levels?.data)) {
-            r.levels.data.forEach((seg: any) => {
-              const segDur = seg.duration ?? 0;
-              if (seg.level === "deep") deepMs += segDur;
-            });
-          } else if (r.level === "deep") {
-            deepMs += dur;
-          }
+          totalMs += r.duration ?? 0;
         });
         if (totalMs > 0) sleepHours = totalMs / (1000 * 60 * 60);
-        if (deepMs > 0) deepSleepHours = deepMs / (1000 * 60 * 60);
       }
     } else if (sleepRes.status === 401) {
       res.status(401).json({ error: "fitbit_unauthorized" });
@@ -124,52 +110,60 @@ export default async function handler(
       return;
     }
 
-    // HRV (RMSSD)
+    // HRV (RMSSD) — try requested date, then previous day (sleep may be attributed to prior night)
     let hrvRmssd: number | undefined;
     let hrvDeepRmssd: number | undefined;
+    const parseHrv = (json: any) => {
+      const arr = json?.hrv;
+      if (!Array.isArray(arr) || !arr[0]?.value) return;
+      const val = arr[0].value;
+      if (val.dailyRmssd != null) {
+        const v = Number(val.dailyRmssd);
+        if (!Number.isNaN(v)) hrvRmssd = v;
+      }
+      if (val.deepRmssd != null) {
+        const v2 = Number(val.deepRmssd);
+        if (!Number.isNaN(v2)) hrvDeepRmssd = v2;
+      }
+    };
     const hrvRes = await fetch(
       `${FITBIT_API_BASE}/1/user/-/hrv/date/${date}.json`,
       { headers }
     );
     if (hrvRes.ok) {
       const json = await hrvRes.json();
-      const arr = json?.hrv;
-      if (Array.isArray(arr) && arr[0]?.value) {
-        const val = arr[0].value;
-        if (val.dailyRmssd != null) {
-          const v = Number(val.dailyRmssd);
-          if (!Number.isNaN(v)) hrvRmssd = v;
-        }
-        if (val.deepRmssd != null) {
-          const v2 = Number(val.deepRmssd);
-          if (!Number.isNaN(v2)) hrvDeepRmssd = v2;
-        }
-      }
+      parseHrv(json);
     } else if (hrvRes.status === 401) {
       res.status(401).json({ error: "fitbit_unauthorized" });
       return;
     }
+    if (hrvRmssd == null && hrvDeepRmssd == null) {
+      const prevDate = new Date(date + "T12:00:00Z");
+      prevDate.setUTCDate(prevDate.getUTCDate() - 1);
+      const dateStr = prevDate.toISOString().slice(0, 10);
+      const hrvRes2 = await fetch(
+        `${FITBIT_API_BASE}/1/user/-/hrv/date/${dateStr}.json`,
+        { headers }
+      );
+      if (hrvRes2.ok) parseHrv(await hrvRes2.json());
+    }
 
-    // VO2 Max (Cardio Fitness Score)
+    // VO2 Max (Cardio Fitness Score) — use cardioscore endpoint and cardioScore response key
     let vo2Max: number | undefined;
     const vo2Res = await fetch(
-      `${FITBIT_API_BASE}/1/user/-/cardio-fitness-score/date/${date}.json`,
+      `${FITBIT_API_BASE}/1/user/-/cardioscore/date/${date}.json`,
       { headers }
     );
     if (vo2Res.ok) {
       const json = await vo2Res.json();
-      const arr = json?.["cardio-fitness-score"];
+      const arr = json?.cardioScore;
       if (Array.isArray(arr) && arr[0]?.value) {
-        const val = arr[0].value as any;
-        // Fitbit often returns vo2Max and/or vo2MaxUpper/Lower
-        const candidate =
-          val.vo2Max ??
-          val.vo2max ??
-          val.cardioFitnessValue ??
-          val["cardio-fitness-score"];
-        if (candidate != null) {
-          const v = Number(candidate);
-          if (!Number.isNaN(v)) vo2Max = v;
+        const val = arr[0].value as { vo2Max?: string | number };
+        const raw = val?.vo2Max;
+        if (raw != null) {
+          const str = String(raw);
+          const num = str.includes("-") ? parseFloat(str) : Number(str);
+          if (!Number.isNaN(num)) vo2Max = num;
         }
       }
     } else if (vo2Res.status === 401) {
@@ -182,7 +176,6 @@ export default async function handler(
       steps,
       sleepHours,
       restingHeartRate,
-      deepSleepHours,
       hrvRmssd,
       hrvDeepRmssd,
       vo2Max,
