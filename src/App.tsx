@@ -256,226 +256,161 @@ async function fetchFitbitDailyData(
 
 const plan: PlanType = {
   "Monday": {
-    label: "Chest + Back + Abs",
-    emoji: "🫁🔙🔥",
-    note: "70 sets/week — antagonist supersets to save time",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio LISS 45')"],
+    label: "Push",
+    emoji: "🏋️",
+    note: "CNS prime: start with 1 set x 2 reps at 90% 1RM on Bench Press to recruit high-threshold motor units.",
+    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
     groups: [
       {
-        name: "SUPERSET A — Chest / Back",
-        sets: 3,
-        rpe: "RPE 7→8",
+        name: "CNS PRIME — Neural Activation",
+        sets: 1,
+        rpe: "RPE 9 (90% 1RM)",
         pairs: [
-          { a: "Bench Press", b: "Bent Over Row", reps: "8–10", rest: "60s after pair" },
-          { a: "Incline DB Press", b: "Seated Cable Row", reps: "10–12", rest: "60s after pair" },
+          { a: "Bench Press (Neural Prime)", b: "—", reps: "2", rest: "120s" },
         ]
       },
       {
-        name: "SUPERSET B — Chest / Back isolation",
-        sets: 3,
+        name: "COMPOUND PUSH",
+        sets: 4,
+        rpe: "RPE 7–8",
+        pairs: [
+          { a: "Bench Press", b: "—", reps: "6–8", rest: "90s" },
+          { a: "Overhead Press", b: "—", reps: "6–8", rest: "90s" },
+        ]
+      },
+      {
+        name: "ACCESSORY PUSH",
+        sets: 4,
         rpe: "RPE 8",
         pairs: [
-          { a: "Cable Fly (mid-chest)", b: "Lat Pulldown", reps: "12–15", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "CIRCUIT — Abs (no rest between)",
-        sets: 3,
-        rpe: "RPE 8–9",
-        pairs: [
-          { a: "Hanging Leg Raise", b: "Cable Crunch", reps: "15–20", rest: "45s after circuit" },
+          { a: "Lateral Raise", b: "—", reps: "12–15", rest: "45s" },
+          { a: "Tricep Extension", b: "—", reps: "10–12", rest: "45s" },
         ]
       }
     ]
   },
   "Tuesday": {
-    label: "Shoulders + Arms",
-    emoji: "💪💪",
-    note: "Supersets: shoulders / biceps / triceps (cross muscle)",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio HIIT 30')"],
+    label: "Pull",
+    emoji: "🔙",
+    note: "Isometric challenge: hold the top of the final rep of every pull-up set for 10 seconds.",
+    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
     groups: [
       {
-        name: "SUPERSET A — Shoulders / Biceps",
+        name: "COMPOUND PULL",
         sets: 4,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Overhead Press", b: "Barbell Curl", reps: "8–10 / 8–10", rest: "90s after pair" },
+          { a: "Weighted Pull-up", b: "—", reps: "6–8", rest: "90s" },
+          { a: "Row", b: "—", reps: "8–10", rest: "90s" },
         ]
       },
       {
-        name: "SUPERSET B — Delt / Biceps",
-        sets: 2,
+        name: "ACCESSORY PULL",
+        sets: 4,
         rpe: "RPE 8",
         pairs: [
-          { a: "Lateral Raise", b: "Hammer Curl", reps: "12–15", rest: "45s after pair" },
-          { a: "Rear Delt Fly", b: "Cable Curl", reps: "12–15", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "SUPERSET C — Triceps / Biceps",
-        sets: 2,
-        rpe: "RPE 8–9",
-        pairs: [
-          { a: "Tricep Pushdown", b: "Incline DB Curl", reps: "12–15", rest: "45s after pair" },
-          { a: "Skull Crusher", b: "—", reps: "10–12", rest: "45s" },
+          { a: "Face Pull", b: "—", reps: "12–15", rest: "45s" },
+          { a: "Bicep Curl", b: "—", reps: "10–12", rest: "45s" },
         ]
       }
     ]
   },
   "Wednesday": {
-    label: "Legs + Glutes + Calves",
-    emoji: "🦵🍑",
-    note: "Supersets: quad / hamstring / glute; calves finish",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio LISS 45')"],
+    label: "Legs",
+    emoji: "🦵",
+    note: "Neuromuscular load: use a 3-second eccentric phase on every Back Squat rep.",
+    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
     groups: [
       {
-        name: "COMPOUND — Quad",
-        sets: 3,
-        rpe: "RPE 7→9 (last set drop set)",
+        name: "COMPOUND LEGS",
+        sets: 4,
+        rpe: "RPE 8",
         pairs: [
-          { a: "Squat", b: "—", reps: "8–10 → drop 20% → failure", rest: "120s" },
+          { a: "Back Squat", b: "—", reps: "6–8 (3s eccentric)", rest: "120s" },
+          { a: "Romanian Deadlift", b: "—", reps: "8–10", rest: "90s" },
         ]
       },
       {
-        name: "SUPERSET A — Hamstring / Quad",
+        name: "ACCESSORY LEGS",
+        sets: 4,
+        rpe: "RPE 8–9",
+        pairs: [
+          { a: "Calf Raise", b: "—", reps: "12–20", rest: "45s" },
+        ]
+      },
+      {
+        name: "UNILATERAL LEGS",
         sets: 3,
         rpe: "RPE 8",
         pairs: [
-          { a: "Romanian Deadlift", b: "Leg Press", reps: "10–12", rest: "60s after pair" },
-        ]
-      },
-      {
-        name: "SUPERSET B — Hamstring / Glute",
-        sets: 2,
-        rpe: "RPE 8–9",
-        pairs: [
-          { a: "Lying Leg Curl (face down)", b: "Hip Thrust", reps: "12–15", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "FINISHER — Calves (slow eccentric 3s down)",
-        sets: 2,
-        rpe: "RPE 9",
-        pairs: [
-          { a: "Standing Calf Raise", b: "—", reps: "15–20", rest: "30s" },
-          { a: "Seated Calf Raise", b: "—", reps: "15–20", rest: "30s" },
+          { a: "Walking Lunges", b: "—", reps: "10–12 each leg", rest: "60s" },
         ]
       }
     ]
   },
   "Thursday": {
-    label: "Chest + Shoulders + Triceps",
-    emoji: "🫁💪",
-    note: "Push day — supersets (chest/delt/core) to save time",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm (Cardio HIIT 30')"],
+    label: "Active / VO2",
+    emoji: "🫀",
+    note: "Mental threshold: complete 5x4 min VO2 max intervals to push peak aerobic capacity.",
+    sessions: ["Mobility 15 min", "VO2 max intervals 5x4 min"],
     groups: [
       {
-        name: "SUPERSET A — Chest / Side Delt + Core",
-        sets: 2,
+        name: "CORE STABILITY",
+        sets: 3,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Incline Bench Press", b: "Lateral Raise", reps: "8–10 / 12–15", rest: "60s after pair" },
-          { a: "Overhead Press", b: "Plank (60s)", reps: "8–10 / 60s", rest: "60s after pair" },
-        ]
-      },
-      {
-        name: "SUPERSET B — Chest / Front Delt + Core",
-        sets: 2,
-        rpe: "RPE 8",
-        pairs: [
-          { a: "Pec Deck / Cable Fly (mid-chest)", b: "Front Raise", reps: "12–15 / 10–12", rest: "45s after pair" },
-          { a: "Dips", b: "Dead Bug (10 per side)", reps: "10–12 / 10 per side", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "STRAIGHT SETS — Triceps",
-        sets: 2,
-        rpe: "RPE 8→9",
-        pairs: [
-          { a: "Overhead Tricep Ext.", b: "—", reps: "10–12 → drop → failure", rest: "45s" },
-          { a: "Tricep Pushdown", b: "—", reps: "10–12 → drop → failure", rest: "45s" },
+          { a: "Weighted Plank", b: "—", reps: "45–60s", rest: "45s" },
         ]
       }
     ]
   },
   "Friday": {
-    label: "Back + Biceps + Rear Delt",
-    emoji: "🔙💪",
-    note: "Pull day — supersets for max pump",
-    sessions: ["Gym 50–60'", "Evening 6–7pm (Cardio LISS 45') optional"],
+    label: "Full Body",
+    emoji: "🏃",
+    note: "Stability prime: perform heavy Farmer's Carries (about half body weight per hand) for 1 minute.",
+    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
     groups: [
       {
-        name: "SUPERSET — Back + Core",
-        sets: 3,
+        name: "FULL BODY COMPOUND",
+        sets: 4,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Deadlift / Rack Pull", b: "Plank (60s)", reps: "6–8 / 60s", rest: "120s after pair" },
+          { a: "Incline Press", b: "—", reps: "8–10", rest: "90s" },
+          { a: "Lat Pulldown", b: "—", reps: "8–10", rest: "90s" },
+          { a: "Goblet Squat", b: "—", reps: "10–12", rest: "75s" },
         ]
       },
       {
-        name: "SUPERSET A — Back / Biceps",
+        name: "CARRY FINISHER",
         sets: 3,
         rpe: "RPE 8",
         pairs: [
-          { a: "Pull-up / Lat Pulldown", b: "Barbell Curl", reps: "8–10", rest: "60s after pair" },
-          { a: "Cable Row", b: "Hammer Curl", reps: "10–12", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "SUPERSET B — Rear Delt / Biceps",
-        sets: 3,
-        rpe: "RPE 8–9",
-        pairs: [
-          { a: "Face Pull", b: "Incline DB Curl", reps: "15–20", rest: "45s after pair" },
+          { a: "Farmer's Carry", b: "—", reps: "60s carry", rest: "60s" },
         ]
       }
     ]
   },
   "Saturday": {
-    label: "Tennis + Home (no gym)",
-    emoji: "🎾🏠",
-    note: "No equipment — bodyweight only after tennis",
-    sessions: ["Tennis 2h (Cardio)", "Optional: bodyweight circuit 20–30' at home"],
+    label: "Tennis",
+    emoji: "🎾",
+    note: "Skill acquisition: prioritize footwork precision; treat this as your high-intensity Zone 3/4 interval session.",
+    sessions: ["High-intensity agility and lateral movement", "Tennis 2h"],
     groups: [
       {
-        name: "CIRCUIT A — Pull / Push (no equipment)",
-        sets: 3,
+        name: "TENNIS PERFORMANCE",
+        sets: 1,
         rpe: "RPE 7–8",
         pairs: [
-          { a: "Inverted Row (table/bar)", b: "Push-up", reps: "8–12", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "CIRCUIT B — Legs / Glutes",
-        sets: 3,
-        rpe: "RPE 7–8",
-        pairs: [
-          { a: "Bodyweight Squat", b: "Glute Bridge", reps: "12–15", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "CIRCUIT C — Hamstrings / Calves (bodyweight)",
-        sets: 2,
-        rpe: "RPE 7–8",
-        pairs: [
-          { a: "Good Morning (bodyweight)", b: "Standing Calf Raise", reps: "10–12 / 15–20", rest: "45s after pair" },
-        ]
-      },
-      {
-        name: "CIRCUIT D — Core",
-        sets: 2,
-        rpe: "RPE 8",
-        pairs: [
-          { a: "Plank", b: "Dead Bug", reps: "60s / 10 per side", rest: "30s after circuit" },
+          { a: "Agility and lateral movement drills", b: "—", reps: "60–120 min", rest: "As needed" },
         ]
       }
     ]
   },
   "Sunday": {
-    label: "REST DAY",
+    label: "Recovery",
     emoji: "😴",
-    note: "Full recovery — muscles grow today, not in the gym",
-    sessions: ["Light walk 20–30' if desired"],
+    note: "Systemic check: use a grip-strength check or morning HRV to confirm CNS recovery.",
+    sessions: ["Daily mobility 10–15 min", "Light walk"],
     groups: []
   }
 };
@@ -532,7 +467,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   lines.push("");
   lines.push(`Export date: ${new Date().toISOString().slice(0, 10)}`);
   lines.push("");
-  lines.push("Plan: 5-day split — Mon Chest+Back+Abs, Tue Shoulders+Arms, Wed Legs+Glutes+Calves, Thu Push, Fri Pull, Sat Tennis+home, Sun Rest.");
+  lines.push("Plan: Mon Push, Tue Pull, Wed Legs, Thu Active/VO2, Fri Full Body, Sat Tennis, Sun Recovery.");
   lines.push("");
   const weekIds = Object.keys(allWeeks).sort().reverse().slice(0, 8);
   weekIds.forEach((weekId: string) => {
