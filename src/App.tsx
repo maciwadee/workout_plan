@@ -515,8 +515,9 @@ const plan: PlanType = {
 
 const stretchingPhases = [
   {
-    title: "Phase 1: Bracing Sequence & 360-Degree Breathing",
+    title: "Phase 1: Spinal Organization & Breathing",
     duration: "10 minutes",
+    note: "Bracing Sequence and 360-Degree Breathing",
     items: [
       "Feet rooted, glutes on, ribs stacked.",
       "Breathe into the full torso to create pressure.",
@@ -524,7 +525,7 @@ const stretchingPhases = [
     ],
   },
   {
-    title: "Phase 2: Stretching or Stability",
+    title: "Phase 2: Systematic Targeted Mobilization",
     duration: "25 minutes",
     schedule: "Stability on Tue and Thu. Stretching on Mon, Wed, Fri, Sat, and Sun.",
     options: [
@@ -549,8 +550,9 @@ const stretchingPhases = [
     ],
   },
   {
-    title: "Phase 3: Cat-Cow, Scapular CARs, 3-Point Plank",
+    title: "Phase 3: Neuromuscular Stability & Control",
     duration: "15 minutes",
+    note: "Cat-Cow, Scapular CARs, and 3-Point Plank",
     items: [
       "Cat-cow with segment-by-segment spinal control.",
       "Scapular CARs in a slow, controlled square.",
@@ -558,7 +560,7 @@ const stretchingPhases = [
     ],
   },
   {
-    title: "Phase 4: The Hip-Hinge Test",
+    title: "Phase 4: Load Order Sequence Practice",
     duration: "10 minutes",
     items: [
       "The Hip-Hinge Test using the Two-Hand Rule.",
@@ -1614,6 +1616,9 @@ export default function App() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-sm font-bold text-white">{phase.title}</h3>
+                  {"note" in phase && phase.note && (
+                    <p className="text-xs text-gray-400 mt-1">{phase.note}</p>
+                  )}
                   {"schedule" in phase && phase.schedule && (
                     <p className="text-xs text-gray-400 mt-1">{phase.schedule}</p>
                   )}
