@@ -127,8 +127,8 @@ type DailyManualData = {
 type WeeklyBodyMeasurements = {
   weekId: string;
   waistCm?: number;
-  hipsCm?: number;
-  thighCm?: number;
+  gripStrengthKg?: number;
+  co2ToleranceSec?: number;
 };
 
 type ProgressWeek = {
@@ -156,6 +156,10 @@ type WeeklySummary = {
   prevAvgWeight?: number;
   waistCm?: number;
   prevWaistCm?: number;
+  gripStrengthKg?: number;
+  prevGripStrengthKg?: number;
+  co2ToleranceSec?: number;
+  prevCo2ToleranceSec?: number;
 };
 
 type ExercisePair = {
@@ -172,12 +176,20 @@ type ExerciseGroup = {
   pairs: ExercisePair[];
 };
 
+type ActivityItem = {
+  name: string;
+  detail: string;
+  duration?: string;
+  intensity?: string;
+};
+
 type DayPlan = {
   label: string;
   emoji: string;
   note: string;
   sessions: string[];
   groups: ExerciseGroup[];
+  activities?: ActivityItem[];
 };
 
 type PlanType = {
@@ -258,8 +270,8 @@ const plan: PlanType = {
   "Monday": {
     label: "Push",
     emoji: "🏋️",
-    note: "CNS prime: start with 1 set x 2 reps at 90% 1RM on Bench Press to recruit high-threshold motor units.",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
+    note: "CNS prime first, then finish the session with 30 minutes of Zone 2 cardio and your stretching tick.",
+    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
     groups: [
       {
         name: "CNS PRIME — Neural Activation",
@@ -287,13 +299,27 @@ const plan: PlanType = {
           { a: "Tricep Extension", b: "—", reps: "10–12", rest: "45s" },
         ]
       }
+    ],
+    activities: [
+      {
+        name: "Zone 2 cardio",
+        detail: "Keep the pace conversational and steady. Nasal breathing and repeatable effort are the target.",
+        duration: "30 min",
+        intensity: "Zone 2",
+      },
+      {
+        name: "Stretching session",
+        detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
     ]
   },
   "Tuesday": {
     label: "Pull",
     emoji: "🔙",
-    note: "Isometric challenge: hold the top of the final rep of every pull-up set for 10 seconds.",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
+    note: "Keep the pull workout intact, then close with Zone 2 cardio and the daily stretching check.",
+    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
     groups: [
       {
         name: "COMPOUND PULL",
@@ -313,13 +339,27 @@ const plan: PlanType = {
           { a: "Bicep Curl", b: "—", reps: "10–12", rest: "45s" },
         ]
       }
+    ],
+    activities: [
+      {
+        name: "Zone 2 cardio",
+        detail: "Bike, incline walk, jog, or row at a pace you could maintain for much longer.",
+        duration: "30 min",
+        intensity: "Zone 2",
+      },
+      {
+        name: "Stretching session",
+        detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
     ]
   },
   "Wednesday": {
     label: "Legs",
     emoji: "🦵",
-    note: "Neuromuscular load: use a 3-second eccentric phase on every Back Squat rep.",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
+    note: "Keep the leg session, then use the Zone 2 finisher and stretching work to recover better for Thursday.",
+    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
     groups: [
       {
         name: "COMPOUND LEGS",
@@ -346,13 +386,27 @@ const plan: PlanType = {
           { a: "Walking Lunges", b: "—", reps: "10–12 each leg", rest: "60s" },
         ]
       }
+    ],
+    activities: [
+      {
+        name: "Zone 2 cardio",
+        detail: "Stay smooth and rhythmic for the full 30 minutes. Save the hard effort for Thursday.",
+        duration: "30 min",
+        intensity: "Zone 2",
+      },
+      {
+        name: "Stretching session",
+        detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
     ]
   },
   "Thursday": {
-    label: "Active / VO2",
+    label: "Active Recovery / VO2",
     emoji: "🫀",
-    note: "Mental threshold: complete 5x4 min VO2 max intervals to push peak aerobic capacity.",
-    sessions: ["Mobility 15 min", "VO2 max intervals 5x4 min"],
+    note: "Move well first, then hit 4x4 minute VO2 max intervals at your top sustainable effort.",
+    sessions: ["Active Recovery / VO2 Max", "15 min Mobility Maintenance", "VO2 Max Intervals: 4x4 min at max effort", "Daily stretching session"],
     groups: [
       {
         name: "CORE STABILITY",
@@ -362,13 +416,27 @@ const plan: PlanType = {
           { a: "Weighted Plank", b: "—", reps: "45–60s", rest: "45s" },
         ]
       }
+    ],
+    activities: [
+      {
+        name: "VO2 max intervals",
+        detail: "Complete 4 rounds of 4 minutes hard with enough easy recovery between rounds to repeat the effort cleanly.",
+        duration: "4x4 min",
+        intensity: "Max effort",
+      },
+      {
+        name: "Stretching session",
+        detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
     ]
   },
   "Friday": {
     label: "Full Body",
     emoji: "🏃",
-    note: "Stability prime: perform heavy Farmer's Carries (about half body weight per hand) for 1 minute.",
-    sessions: ["Noon 12–1pm", "Evening 6–7pm"],
+    note: "Keep the full-body lift, then finish with Zone 2 work and your daily stretching tick.",
+    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
     groups: [
       {
         name: "FULL BODY COMPOUND",
@@ -388,13 +456,27 @@ const plan: PlanType = {
           { a: "Farmer's Carry", b: "—", reps: "60s carry", rest: "60s" },
         ]
       }
+    ],
+    activities: [
+      {
+        name: "Zone 2 cardio",
+        detail: "Stay patient. The goal is durable aerobic volume, not chasing speed.",
+        duration: "30 min",
+        intensity: "Zone 2",
+      },
+      {
+        name: "Stretching session",
+        detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
     ]
   },
   "Saturday": {
     label: "Tennis",
     emoji: "🎾",
-    note: "Skill acquisition: prioritize footwork precision; treat this as your high-intensity Zone 3/4 interval session.",
-    sessions: ["High-intensity agility and lateral movement", "Tennis 2h"],
+    note: "Keep the tennis work, prioritize agility and lateral movement, then finish with your stretching tick.",
+    sessions: ["Focus on agility and lateral movement", "Daily stretching session"],
     groups: [
       {
         name: "TENNIS PERFORMANCE",
@@ -404,16 +486,85 @@ const plan: PlanType = {
           { a: "Agility and lateral movement drills", b: "—", reps: "60–120 min", rest: "As needed" },
         ]
       }
+    ],
+    activities: [
+      {
+        name: "Stretching session",
+        detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
     ]
   },
   "Sunday": {
-    label: "Recovery",
+    label: "Complete Rest",
     emoji: "😴",
-    note: "Systemic check: use a grip-strength check or morning HRV to confirm CNS recovery.",
-    sessions: ["Daily mobility 10–15 min", "Light walk"],
-    groups: []
+    note: "Take a true recovery day. Keep only light mobility, your daily stretching session, and restorative habits.",
+    sessions: ["Complete Rest", "10–15 min Daily Mobility", "Daily stretching session"],
+    groups: [],
+    activities: [
+      {
+        name: "Stretching session",
+        detail: "Use Sunday to complete the daily stretching protocol without chasing intensity.",
+        duration: "Daily",
+        intensity: "Recovery",
+      },
+    ]
   }
 };
+
+const stretchingPhases = [
+  {
+    title: "Phase 1: Bracing Sequence & 360-Degree Breathing",
+    duration: "10 minutes",
+    items: [
+      "Feet rooted, glutes on, ribs stacked.",
+      "Breathe into the full torso to create pressure.",
+      "Keep head and shoulders in a neutral, organized position.",
+    ],
+  },
+  {
+    title: "Phase 2: Stretching or Stability",
+    duration: "25 minutes",
+    schedule: "Stability on Tue and Thu. Stretching on Mon, Wed, Fri, Sat, and Sun.",
+    options: [
+      {
+        label: "Stretching",
+        items: [
+          "T-Spine Roller Smash (5 minutes)",
+          "Hip Capsule / Glute Smashing (10 minutes — 5 per side)",
+          '"Super Couch" Stretch (10 minutes — 5 per side)',
+        ],
+      },
+      {
+        label: "Stability",
+        items: [
+          "Global Gut Smash / Psoas Smash (10 mins)",
+          "Adductor Smashing (4 mins — 2 per side)",
+          "Serratus Smash (4 mins — 2 per side)",
+          "Anterior Neck Mob (4 mins — 2 per side)",
+          "Forearm Shear (3 mins — scrubbing both sides)",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Phase 3: Cat-Cow, Scapular CARs, 3-Point Plank",
+    duration: "15 minutes",
+    items: [
+      "Cat-cow with segment-by-segment spinal control.",
+      "Scapular CARs in a slow, controlled square.",
+      "Two-point or three-point plank without rotation.",
+    ],
+  },
+  {
+    title: "Phase 4: The Hip-Hinge Test",
+    duration: "10 minutes",
+    items: [
+      "The Hip-Hinge Test using the Two-Hand Rule.",
+    ],
+  },
+];
 
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
@@ -426,6 +577,10 @@ const rpeColor = (rpe: string): string => {
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 function getTodayDayName(): string {
   return dayNames[new Date().getDay()];
+}
+
+function hasPlannedWork(dayPlan: DayPlan): boolean {
+  return dayPlan.groups.length > 0 || (dayPlan.activities?.length ?? 0) > 0;
 }
 
 function buildKeyToExerciseName(): Record<string, string> {
@@ -467,7 +622,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   lines.push("");
   lines.push(`Export date: ${new Date().toISOString().slice(0, 10)}`);
   lines.push("");
-  lines.push("Plan: Mon Push, Tue Pull, Wed Legs, Thu Active/VO2, Fri Full Body, Sat Tennis, Sun Recovery.");
+  lines.push("Plan: Mon/Tue/Wed/Fri Zone 2, Thu Active Recovery plus 4x4 VO2 intervals, Sat Agility, Sun Complete Rest, daily stretching all week.");
   lines.push("");
   const weekIds = Object.keys(allWeeks).sort().reverse().slice(0, 8);
   weekIds.forEach((weekId: string) => {
@@ -477,7 +632,8 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
     if (!w) return;
     days.forEach((day: string) => {
       const groups = plan[day].groups;
-      if (groups.length === 0) return;
+      const activities = plan[day].activities ?? [];
+      if (groups.length === 0 && activities.length === 0) return;
       const items: string[] = [];
       groups.forEach((g: ExerciseGroup, gi: number) => {
         g.pairs.forEach((pair: ExercisePair, pi: number) => {
@@ -492,6 +648,11 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
             items.push(`${pair.b} ${wtB ?? "—"} kg ${doneB ? "done" : "—"}`);
           }
         });
+      });
+      activities.forEach((activity: ActivityItem, ai: number) => {
+        const done = w.checked?.[`${day}-activity-${ai}`];
+        const duration = activity.duration ? ` (${activity.duration})` : "";
+        items.push(`${activity.name}${duration} ${done ? "done" : "—"}`);
       });
       lines.push(`### ${day} — ${plan[day].label}`);
       lines.push(items.join("; ") + ".");
@@ -514,8 +675,10 @@ function hasSecondExercise(pair: ExercisePair): boolean {
 }
 
 function isDayComplete(weekData: WeekData, d: string): boolean {
-  const groups = plan[d].groups;
-  if (groups.length === 0) return false;
+  const dayPlan = plan[d];
+  if (!hasPlannedWork(dayPlan)) return false;
+  const groups = dayPlan.groups;
+  const activities = dayPlan.activities ?? [];
   const checked = weekData?.checked ?? {};
   for (let gi = 0; gi < groups.length; gi++) {
     const g = groups[gi];
@@ -529,9 +692,8 @@ function isDayComplete(weekData: WeekData, d: string): boolean {
       }
     }
   }
-  const cardioSessions = plan[d].sessions.filter((s: string) => /Cardio|LISS|HIIT/i.test(s));
-  for (let ci = 0; ci < cardioSessions.length; ci++) {
-    if (!checked[`${d}-cardio-${ci}`]) return false;
+  for (let ai = 0; ai < activities.length; ai++) {
+    if (!checked[`${d}-activity-${ai}`]) return false;
   }
   return true;
 }
@@ -576,6 +738,10 @@ function buildWeeklySummary(
 
   const waistCm = current?.measurements?.waistCm;
   const prevWaistCm = prev?.measurements?.waistCm;
+  const gripStrengthKg = current?.measurements?.gripStrengthKg;
+  const prevGripStrengthKg = prev?.measurements?.gripStrengthKg;
+  const co2ToleranceSec = current?.measurements?.co2ToleranceSec;
+  const prevCo2ToleranceSec = prev?.measurements?.co2ToleranceSec;
 
   return {
     weekId,
@@ -583,6 +749,10 @@ function buildWeeklySummary(
     prevAvgWeight,
     waistCm,
     prevWaistCm,
+    gripStrengthKg,
+    prevGripStrengthKg,
+    co2ToleranceSec,
+    prevCo2ToleranceSec,
   };
 }
 
@@ -594,7 +764,7 @@ function buildDailySummary(
   progress: ProgressByWeek,
   fitbit: DailyFitbitData | null
 ): DailySummary {
-  const isTrainingDay = plan[dayName].groups.length > 0;
+  const isTrainingDay = hasPlannedWork(plan[dayName]);
   const workoutCompleted = isTrainingDay ? isDayComplete(weekData, dayName) : false;
 
   const pw = progress[weekId];
@@ -660,7 +830,7 @@ export default function App() {
   const [fitbitConnected, setFitbitConnected] = useState<boolean>(() => !!getStoredFitbitTokens());
   const [fitbitDaily, setFitbitDaily] = useState<DailyFitbitData | null>(null);
   const [fitbitStatus, setFitbitStatus] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"workout" | "progress">("workout");
+  const [activeTab, setActiveTab] = useState<"workout" | "progress" | "stretching">("workout");
 
   useEffect(() => {
     const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
@@ -798,6 +968,8 @@ export default function App() {
   const day = plan[activeDay];
 
   const totalSets = day.groups.reduce((acc: number, g: ExerciseGroup) => acc + g.sets * g.pairs.length, 0);
+  const totalActivities = day.activities?.length ?? 0;
+  const isRestDay = !hasPlannedWork(day);
 
   const previousWeekId = getPreviousWeekId(selectedWeek);
   const nextWeekId = getNextWeekId(selectedWeek);
@@ -809,7 +981,7 @@ export default function App() {
       {/* Header */}
       <div className="bg-gray-900 border border-gray-800 px-4 py-3 flex-shrink-0 rounded-2xl mx-3 mt-3">
         <h1 className="text-xl font-bold text-center text-white">💪 Workout Tracker</h1>
-        <p className="text-center text-gray-400 text-sm mt-1">5-Day | 3 Muscle Groups/Day | Superset + RPE</p>
+        <p className="text-center text-gray-400 text-sm mt-1">Zone 2 | Mobility | Stretching | Readiness</p>
         <div className="flex justify-center gap-2 mt-3">
           <button
             type="button"
@@ -832,6 +1004,17 @@ export default function App() {
             }`}
           >
             Progress
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("stretching")}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium border-2 transition-all ${
+              activeTab === "stretching"
+                ? "text-white border-gray-700 ring bg-gray-800"
+                : "text-gray-300 border-gray-700 bg-gray-900 hover:bg-gray-800"
+            }`}
+          >
+            Stretching
           </button>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-2 mt-3">
@@ -978,7 +1161,7 @@ export default function App() {
       {/* Day Selector — completed days: green shade (stays green when selected) */}
       <div className="flex overflow-x-auto gap-2 px-3 py-2 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3">
         {days.map((d: string) => {
-          const isRest = plan[d].groups.length === 0;
+          const isRest = !hasPlannedWork(plan[d]);
           const isActive = activeDay === d;
           const dayComplete = !isRest && isDayComplete(weekData, d);
           const showGreen = dayComplete;
@@ -1013,17 +1196,13 @@ export default function App() {
               <div className="text-lg font-bold mt-1">{activeDay}</div>
               <div className="text-orange-400 font-semibold text-sm">{day.label}</div>
             </div>
-            {day.groups.length > 0 && (
+            {hasPlannedWork(day) && (
               <div className="text-right flex-shrink-0 pl-4 border-l border-gray-700">
-                <div className="text-2xl font-bold text-orange-400">{totalSets}</div>
-                <div className="text-gray-400 text-xs">total sets</div>
+                <div className="text-2xl font-bold text-orange-400">{day.groups.length > 0 ? totalSets : totalActivities}</div>
+                <div className="text-gray-400 text-xs">{day.groups.length > 0 ? "total sets" : "planned blocks"}</div>
               </div>
             )}
           </div>
-          <p className="mt-3 text-gray-400 text-sm italic flex items-baseline gap-1.5">
-            <span className="text-gray-500 flex-shrink-0" aria-hidden>•</span>
-            <span>💡 {day.note}</span>
-          </p>
           <ul className="mt-3 flex flex-wrap gap-2 list-none pl-0">
             {day.sessions.map((s: string, i: number) => (
               <li key={i}>
@@ -1039,7 +1218,7 @@ export default function App() {
       {/* Workout Groups */}
       {activeTab === "workout" && (
       <div className="px-4 py-4 space-y-6 flex-1">
-        {day.groups.length === 0 ? (
+        {isRestDay ? (
           <div className="py-10">
             <div className="text-center">
               <div className="text-6xl mb-4">{day.emoji}</div>
@@ -1050,7 +1229,7 @@ export default function App() {
             <div className="mt-8 space-y-3 text-sm text-gray-400 max-w-xl mx-auto">
               <p className="font-semibold text-gray-300 text-center">Suggested recovery checklist</p>
               <ul className="space-y-1 list-disc list-inside">
-                <li>10–15' easy walk or light stretching</li>
+                <li>10–15 min daily mobility and your full stretching session</li>
                 <li>Hit daily step target and drink 2–3L of water</li>
                 <li>8+ hours of sleep and 1–2 high-protein meals</li>
               </ul>
@@ -1138,92 +1317,51 @@ export default function App() {
               </div>
             ))}
 
-            {/* Cardio completion after weightlifting sets */}
-            {(() => {
-              const cardioSessions = day.sessions.filter((s: string) =>
-                /Cardio|LISS|HIIT/i.test(s)
-              );
-              if (cardioSessions.length === 0) return null;
-              const cardioRpe = "RPE 7–9";
-              
-              // Extract time from first cardio session (format: "Evening 6–7pm (Cardio LISS 45')")
-              const firstCardio = cardioSessions[0];
-              const timeMatch = firstCardio.match(/^([^(]+)/);
-              const time = timeMatch ? timeMatch[1].trim() : "";
-              
-              return (
-                <div className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                  {/* Group Header */}
-                  <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
-                    <div>
-                      <div className="font-bold text-white text-sm">CARDIO - {time}</div>
-                      <div className="text-gray-400 text-xs mt-0.5">
-                        {cardioSessions.length} session{cardioSessions.length > 1 ? "s" : ""} · Finish after weights
-                      </div>
-                    </div>
-                    <span className={`text-xs font-bold px-2 py-1 rounded-full bg-gray-900 ${rpeColor(cardioRpe)}`}>
-                      {cardioRpe}
-                    </span>
+            {(day.activities?.length ?? 0) > 0 && (
+              <div className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+                <div className="px-4 py-3 bg-gray-800 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-white text-sm">PLANNED WORK</div>
+                    <div className="text-gray-400 text-xs mt-0.5">{day.activities?.length ?? 0} item{(day.activities?.length ?? 0) > 1 ? "s" : ""} to complete</div>
                   </div>
-
-                  {/* Cardio Items */}
-                  <div className="divide-y divide-gray-800">
-                    {cardioSessions.map((cardioSession: string, ci: number) => {
-                      const cardioKey = `${activeDay}-cardio-${ci}`;
-                      const cardioDone = checked[cardioKey];
-
-                      // Extract cardio type from inside parentheses (format: "Evening 6–7pm (Cardio LISS 45')")
-                      const cardioMatch = cardioSession.match(/\(([^)]+)\)/);
-                      const cardioType = cardioMatch ? cardioMatch[1].trim() : cardioSession;
-                      
-                      // Determine if HIIT or LISS and create instruction note
-                      const isHIIT = /HIIT/i.test(cardioType);
-                      const isLISS = /LISS/i.test(cardioType);
-                      const durationMatch = cardioType.match(/(\d+)/);
-                      const duration = durationMatch ? durationMatch[1] : "";
-                      
-                      let instructionNote = "";
-                      if (isHIIT) {
-                        instructionNote = `HIIT — 8–10 × 30s (50% HRmax) & 60s (95% HRmax)`;
-                      } else if (isLISS) {
-                        instructionNote = `LISS — ${duration}' at 60-70% HRmax continuous`;
-                      } else {
-                        instructionNote = cardioType;
-                      }
-
-                      return (
-                        <div key={ci} className="px-4 py-3">
-                          <p className="text-xs text-gray-500 mb-2 flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
-                            <span className="text-gray-500 flex-shrink-0">•</span>
-                            <span className="truncate">{instructionNote}</span>
-                          </p>
-                          <div className={`flex items-center gap-3 p-2 rounded-lg ${cardioDone ? "bg-green-900/30" : "bg-gray-800"}`}>
-                            <button
-                              onClick={() => toggleCheck(cardioKey)}
-                              className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
-                                cardioDone ? "bg-green-500 border-green-500" : "border-gray-600"
-                              }`}
-                            >
-                              {cardioDone && <span className="text-white text-xs">✓</span>}
-                            </button>
-                            <div className="flex-1 min-w-0 flex flex-col justify-center">
-                              <div
-                                className={`font-semibold text-sm truncate ${
-                                  cardioDone ? "line-through text-gray-500" : "text-white"
-                                }`}
-                                title={cardioSession}
-                              >
-                                ❤️‍🔥 {cardioType}
-                              </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-gray-900 text-cyan-300">
+                    Cardio / movement
+                  </span>
+                </div>
+                <div className="divide-y divide-gray-800">
+                  {(day.activities ?? []).map((activity: ActivityItem, ai: number) => {
+                    const activityKey = `${activeDay}-activity-${ai}`;
+                    const activityDone = checked[activityKey];
+                    return (
+                      <div key={activityKey} className="px-4 py-3">
+                        <p className="text-xs text-gray-500 mb-2 flex items-center gap-1.5">
+                          <span className="text-gray-500 flex-shrink-0">•</span>
+                          <span>{activity.detail}</span>
+                        </p>
+                        <div className={`flex items-center gap-3 p-2 rounded-lg ${activityDone ? "bg-green-900/30" : "bg-gray-800"}`}>
+                          <button
+                            onClick={() => toggleCheck(activityKey)}
+                            className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
+                              activityDone ? "bg-green-500 border-green-500" : "border-gray-600"
+                            }`}
+                          >
+                            {activityDone && <span className="text-white text-xs">✓</span>}
+                          </button>
+                          <div className="flex-1 min-w-0 flex flex-col justify-center">
+                            <div className={`font-semibold text-sm truncate ${activityDone ? "line-through text-gray-500" : "text-white"}`}>
+                              {activity.name}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-0.5">
+                              {[activity.duration, activity.intensity].filter(Boolean).join(" · ") || "Complete as written"}
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })()}
+              </div>
+            )}
           </>
         )}
 
@@ -1409,11 +1547,11 @@ export default function App() {
                   />
                 </div>
                 <div className="flex justify-between items-center gap-2">
-                  <span className="text-gray-400">Hips (widest, cm)</span>
+                  <span className="text-gray-400">Grip strength (kg)</span>
                   <input
                     type="number"
                     className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-right text-xs"
-                    value={progressByWeek[selectedWeek]?.measurements?.hipsCm ?? ""}
+                    value={progressByWeek[selectedWeek]?.measurements?.gripStrengthKg ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
                       persistProgressWeek(selectedWeek, (prev) => {
@@ -1425,8 +1563,8 @@ export default function App() {
                           weekId: selectedWeek,
                           ...(base.measurements ?? {}),
                         };
-                        const hips = val === "" ? undefined : Number(val);
-                        meas.hipsCm = Number.isNaN(hips) ? undefined : hips;
+                        const gripStrength = val === "" ? undefined : Number(val);
+                        meas.gripStrengthKg = Number.isNaN(gripStrength) ? undefined : gripStrength;
                         base.measurements = meas;
                         return { ...base };
                       });
@@ -1434,11 +1572,11 @@ export default function App() {
                   />
                 </div>
                 <div className="flex justify-between items-center gap-2">
-                  <span className="text-gray-400">One thigh (cm)</span>
+                  <span className="text-gray-400">CO2 tolerance (sec)</span>
                   <input
                     type="number"
                     className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-right text-xs"
-                    value={progressByWeek[selectedWeek]?.measurements?.thighCm ?? ""}
+                    value={progressByWeek[selectedWeek]?.measurements?.co2ToleranceSec ?? ""}
                     onChange={(e) => {
                       const val = e.target.value;
                       persistProgressWeek(selectedWeek, (prev) => {
@@ -1450,8 +1588,8 @@ export default function App() {
                           weekId: selectedWeek,
                           ...(base.measurements ?? {}),
                         };
-                        const thigh = val === "" ? undefined : Number(val);
-                        meas.thighCm = Number.isNaN(thigh) ? undefined : thigh;
+                        const co2Tolerance = val === "" ? undefined : Number(val);
+                        meas.co2ToleranceSec = Number.isNaN(co2Tolerance) ? undefined : co2Tolerance;
                         base.measurements = meas;
                         return { ...base };
                       });
@@ -1461,6 +1599,51 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {activeTab === "stretching" && (
+        <div className="px-4 py-3 bg-gray-900 border border-gray-800 rounded-2xl mx-3 mt-3 mb-4 flex-1 flex flex-col gap-3">
+          <div className="text-center">
+            <h2 className="text-lg font-bold text-white">🧘 Daily Stretching Session</h2>
+            <p className="text-xs text-gray-400 mt-1">
+              Run this sequence every day after your main session or as a standalone reset on recovery days.
+            </p>
+          </div>
+          {stretchingPhases.map((phase) => (
+            <div key={phase.title} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-bold text-white">{phase.title}</h3>
+                  {"schedule" in phase && phase.schedule && (
+                    <p className="text-xs text-gray-400 mt-1">{phase.schedule}</p>
+                  )}
+                </div>
+                <span className="text-[11px] px-2 py-1 rounded-full bg-gray-900 text-orange-300 border border-gray-700">
+                  {phase.duration}
+                </span>
+              </div>
+              {"options" in phase && phase.options ? (
+                <div className="mt-3 grid gap-3">
+                  {phase.options.map((option) => (
+                    <div key={option.label} className="rounded-lg border border-gray-700 bg-gray-900/50 p-3">
+                      <div className="text-xs font-semibold text-orange-300">{option.label}</div>
+                      <ul className="mt-2 space-y-2 text-xs text-gray-300 list-disc list-inside">
+                        {option.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ul className="mt-3 space-y-2 text-xs text-gray-300 list-disc list-inside">
+                  {phase.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
         </div>
       )}
       </div>
