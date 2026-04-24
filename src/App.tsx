@@ -183,6 +183,20 @@ type ActivityItem = {
   intensity?: string;
 };
 
+type StretchingOption = {
+  label: string;
+  items: string[];
+};
+
+type StretchingPhase = {
+  title: string;
+  duration: string;
+  note?: string;
+  schedule?: string;
+  items?: string[];
+  options?: StretchingOption[];
+};
+
 type DayPlan = {
   label: string;
   emoji: string;
@@ -513,15 +527,13 @@ const plan: PlanType = {
   }
 };
 
-const stretchingPhases = [
+const stretchingPhases: StretchingPhase[] = [
   {
     title: "Phase 1: Spinal Organization & Breathing",
     duration: "10 minutes",
-    note: "Bracing Sequence and 360-Degree Breathing",
     items: [
-      "Feet rooted, glutes on, ribs stacked.",
-      "Breathe into the full torso to create pressure.",
-      "Keep head and shoulders in a neutral, organized position.",
+      "Bracing Sequence",
+      "360-Degree Breathing",
     ],
   },
   {
@@ -552,18 +564,17 @@ const stretchingPhases = [
   {
     title: "Phase 3: Neuromuscular Stability & Control",
     duration: "15 minutes",
-    note: "Cat-Cow, Scapular CARs, and 3-Point Plank",
     items: [
-      "Cat-cow with segment-by-segment spinal control.",
-      "Scapular CARs in a slow, controlled square.",
-      "Two-point or three-point plank without rotation.",
+      "Cat-Cow",
+      "Scapular CARs",
+      "3-Point Plank",
     ],
   },
   {
     title: "Phase 4: Load Order Sequence Practice",
     duration: "10 minutes",
     items: [
-      "The Hip-Hinge Test using the Two-Hand Rule.",
+      "The Hip-Hinge Test (using the Two-Hand Rule)",
     ],
   },
 ];
@@ -1616,10 +1627,10 @@ export default function App() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-sm font-bold text-white">{phase.title}</h3>
-                  {"note" in phase && phase.note && (
+                  {typeof phase.note === "string" && phase.note && (
                     <p className="text-xs text-gray-400 mt-1">{phase.note}</p>
                   )}
-                  {"schedule" in phase && phase.schedule && (
+                  {typeof phase.schedule === "string" && phase.schedule && (
                     <p className="text-xs text-gray-400 mt-1">{phase.schedule}</p>
                   )}
                 </div>
@@ -1642,7 +1653,7 @@ export default function App() {
                 </div>
               ) : (
                 <ul className="mt-3 space-y-2 text-xs text-gray-300 list-disc list-inside">
-                  {phase.items.map((item) => (
+                  {(phase.items ?? []).map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
