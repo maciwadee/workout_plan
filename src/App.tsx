@@ -282,44 +282,50 @@ async function fetchFitbitDailyData(
 
 const plan: PlanType = {
   "Monday": {
-    label: "Push",
+    label: "Push Day + VO2 Max",
     emoji: "🏋️",
-    note: "CNS prime first, then finish the session with 30 minutes of Zone 2 cardio and your stretching tick.",
-    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
+    note: "Bench and lateral raise are the higher-volume anchors today. Finish with 4 x 4 minute VO2 max intervals and keep the daily stretching tick.",
+    sessions: ["Noon 12–1pm", "VO2 max finisher: 4 x 4 min", "Daily stretching session"],
     groups: [
       {
-        name: "CNS PRIME — Neural Activation",
-        sets: 1,
-        rpe: "RPE 9 (90% 1RM)",
-        pairs: [
-          { a: "Bench Press (Neural Prime)", b: "—", reps: "2", rest: "120s" },
-        ]
-      },
-      {
-        name: "COMPOUND PUSH",
+        name: "BENCH PRESS",
         sets: 4,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Bench Press", b: "—", reps: "6–8", rest: "90s" },
+        ]
+      },
+      {
+        name: "OVERHEAD PRESS",
+        sets: 3,
+        rpe: "RPE 7–8",
+        pairs: [
           { a: "Overhead Press", b: "—", reps: "6–8", rest: "90s" },
         ]
       },
       {
-        name: "ACCESSORY PUSH",
+        name: "INCLINE CABLE FLY",
+        sets: 3,
+        rpe: "RPE 8",
+        pairs: [
+          { a: "Incline Cable Fly", b: "—", reps: "10–12", rest: "45s" },
+        ]
+      },
+      {
+        name: "EGYPTIAN LATERAL RAISE",
         sets: 4,
         rpe: "RPE 8",
         pairs: [
-          { a: "Lateral Raise", b: "—", reps: "12–15", rest: "45s" },
-          { a: "Tricep Extension", b: "—", reps: "10–12", rest: "45s" },
+          { a: "Egyptian Lateral Raise", b: "—", reps: "12–15", rest: "45s" },
         ]
       }
     ],
     activities: [
       {
-        name: "Zone 2 cardio",
-        detail: "Keep the pace conversational and steady. Nasal breathing and repeatable effort are the target.",
-        duration: "30 min",
-        intensity: "Zone 2",
+        name: "VO2 max intervals",
+        detail: "Complete 4 rounds of 4 minutes hard with enough easy recovery between rounds to repeat the effort cleanly.",
+        duration: "4 x 4 min",
+        intensity: "Max effort",
       },
       {
         name: "Stretching session",
@@ -330,27 +336,41 @@ const plan: PlanType = {
     ]
   },
   "Tuesday": {
-    label: "Pull",
+    label: "Pull Day + Zone 2",
     emoji: "🔙",
-    note: "Keep the pull workout intact, then close with Zone 2 cardio and the daily stretching check.",
-    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
+    note: "Weighted pull-ups and curls carry the extra volume today. Finish with a full 60-minute Zone 2 block and keep the daily stretching tick.",
+    sessions: ["Noon 12–1pm", "Evening finisher: 60 min Zone 2 Cardio", "Daily stretching session"],
     groups: [
       {
-        name: "COMPOUND PULL",
+        name: "WEIGHTED PULL-UP",
         sets: 4,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Weighted Pull-up", b: "—", reps: "6–8", rest: "90s" },
-          { a: "Row", b: "—", reps: "8–10", rest: "90s" },
         ]
       },
       {
-        name: "ACCESSORY PULL",
+        name: "MEADOWS ROW",
+        sets: 3,
+        rpe: "RPE 7–8",
+        pairs: [
+          { a: "Meadows Row", b: "—", reps: "8–10", rest: "90s" },
+        ]
+      },
+      {
+        name: "OMNI-GRIP LAT PULLDOWN",
+        sets: 3,
+        rpe: "RPE 8",
+        pairs: [
+          { a: "Omni-grip Lat Pulldown", b: "—", reps: "10–12", rest: "60s" },
+        ]
+      },
+      {
+        name: "EZ-BAR BICEP CURL",
         sets: 4,
         rpe: "RPE 8",
         pairs: [
-          { a: "Face Pull", b: "—", reps: "12–15", rest: "45s" },
-          { a: "Bicep Curl", b: "—", reps: "10–12", rest: "45s" },
+          { a: "EZ-Bar Bicep Curl", b: "—", reps: "10–12", rest: "45s" },
         ]
       }
     ],
@@ -358,7 +378,7 @@ const plan: PlanType = {
       {
         name: "Zone 2 cardio",
         detail: "Bike, incline walk, jog, or row at a pace you could maintain for much longer.",
-        duration: "30 min",
+        duration: "60 min",
         intensity: "Zone 2",
       },
       {
@@ -370,42 +390,49 @@ const plan: PlanType = {
     ]
   },
   "Wednesday": {
-    label: "Legs",
+    label: "Legs Day + Zone 2",
     emoji: "🦵",
-    note: "Keep the leg session, then use the Zone 2 finisher and stretching work to recover better for Thursday.",
-    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
+    note: "Open with a neural-prime squat set, emphasize the deep hamstring stretch on RDLs, then finish with 60 minutes of Zone 2 and your stretching tick.",
+    sessions: ["Noon 12–1pm", "Evening finisher: 60 min Zone 2 Cardio", "Daily stretching session"],
     groups: [
       {
-        name: "COMPOUND LEGS",
+        name: "BACK SQUAT",
         sets: 4,
         rpe: "RPE 8",
         pairs: [
-          { a: "Back Squat", b: "—", reps: "6–8 (3s eccentric)", rest: "120s" },
+          { a: "Back Squat (1st set is Neural Prime)", b: "—", reps: "6–8", rest: "120s" },
+        ]
+      },
+      {
+        name: "ROMANIAN DEADLIFT",
+        sets: 4,
+        rpe: "RPE 8",
+        pairs: [
           { a: "Romanian Deadlift", b: "—", reps: "8–10", rest: "90s" },
         ]
       },
       {
-        name: "ACCESSORY LEGS",
-        sets: 4,
+        name: "LYING LEG CURL",
+        sets: 3,
         rpe: "RPE 8–9",
         pairs: [
-          { a: "Calf Raise", b: "—", reps: "12–20", rest: "45s" },
+          { a: "Lying Leg Curl", b: "—", reps: "10–12", rest: "60s" },
         ]
       },
       {
-        name: "UNILATERAL LEGS",
+        name: "CALF RAISE",
         sets: 3,
-        rpe: "RPE 8",
+        rpe: "RPE 8–9",
         pairs: [
-          { a: "Walking Lunges", b: "—", reps: "10–12 each leg", rest: "60s" },
+          { a: "Calf Raise", b: "—", reps: "12–20", rest: "45s" },
         ]
       }
     ],
     activities: [
       {
         name: "Zone 2 cardio",
-        detail: "Stay smooth and rhythmic for the full 30 minutes. Save the hard effort for Thursday.",
-        duration: "30 min",
+        detail: "Stay smooth and rhythmic for the full hour. Keep the pace fully conversational.",
+        duration: "60 min",
         intensity: "Zone 2",
       },
       {
@@ -417,13 +444,13 @@ const plan: PlanType = {
     ]
   },
   "Thursday": {
-    label: "Active Recovery / VO2",
+    label: "Alignment + Zone 2 Recovery",
     emoji: "🫀",
-    note: "Move well first, then hit 4x4 minute VO2 max intervals at your top sustainable effort.",
-    sessions: ["Active Recovery / VO2 Max", "15 min Mobility Maintenance", "VO2 Max Intervals: 4x4 min at max effort", "Daily stretching session"],
+    note: "Keep Thursday aligned and restorative with weighted plank work, a 60-minute Zone 2 recovery block, and the daily stretching tick.",
+    sessions: ["Alignment day", "60 min Zone 2 recovery cardio", "Daily stretching session"],
     groups: [
       {
-        name: "CORE STABILITY",
+        name: "RECOVERY CORE",
         sets: 3,
         rpe: "RPE 7–8",
         pairs: [
@@ -433,10 +460,10 @@ const plan: PlanType = {
     ],
     activities: [
       {
-        name: "VO2 max intervals",
-        detail: "Complete 4 rounds of 4 minutes hard with enough easy recovery between rounds to repeat the effort cleanly.",
-        duration: "4x4 min",
-        intensity: "Max effort",
+        name: "Zone 2 cardio",
+        detail: "Keep the pace aerobic and steady for the full hour. This is recovery-oriented, not a hard conditioning day.",
+        duration: "60 min",
+        intensity: "Zone 2",
       },
       {
         name: "Stretching session",
@@ -447,18 +474,32 @@ const plan: PlanType = {
     ]
   },
   "Friday": {
-    label: "Full Body",
+    label: "Full Body Day",
     emoji: "🏃",
-    note: "Keep the full-body lift, then finish with Zone 2 work and your daily stretching tick.",
-    sessions: ["Noon 12–1pm", "Evening finisher: 30 min Zone 2 Cardio", "Daily stretching session"],
+    note: "Keep Friday as a pure full-body lift with pressing, pulldown, squat, carries, and triceps work before your stretching tick.",
+    sessions: ["Noon 12–1pm", "Daily stretching session"],
     groups: [
       {
-        name: "FULL BODY COMPOUND",
+        name: "INCLINE PRESS",
         sets: 4,
         rpe: "RPE 7–8",
         pairs: [
           { a: "Incline Press", b: "—", reps: "8–10", rest: "90s" },
+        ]
+      },
+      {
+        name: "LAT PULLDOWN",
+        sets: 4,
+        rpe: "RPE 7–8",
+        pairs: [
           { a: "Lat Pulldown", b: "—", reps: "8–10", rest: "90s" },
+        ]
+      },
+      {
+        name: "GOBLET SQUAT",
+        sets: 3,
+        rpe: "RPE 7–8",
+        pairs: [
           { a: "Goblet Squat", b: "—", reps: "10–12", rest: "75s" },
         ]
       },
@@ -469,15 +510,17 @@ const plan: PlanType = {
         pairs: [
           { a: "Farmer's Carry", b: "—", reps: "60s carry", rest: "60s" },
         ]
+      },
+      {
+        name: "TRICEP PRESSDOWN",
+        sets: 3,
+        rpe: "RPE 8",
+        pairs: [
+          { a: "Tricep Pressdown", b: "—", reps: "10–12", rest: "45s" },
+        ]
       }
     ],
     activities: [
-      {
-        name: "Zone 2 cardio",
-        detail: "Stay patient. The goal is durable aerobic volume, not chasing speed.",
-        duration: "30 min",
-        intensity: "Zone 2",
-      },
       {
         name: "Stretching session",
         detail: "Complete the daily stretching protocol after training to reinforce bracing, mobility, and control.",
@@ -635,7 +678,7 @@ function buildMarkdownReport(allWeeks: Record<string, WeekData>): string {
   lines.push("");
   lines.push(`Export date: ${new Date().toISOString().slice(0, 10)}`);
   lines.push("");
-  lines.push("Plan: Mon/Tue/Wed/Fri Zone 2, Thu Active Recovery plus 4x4 VO2 intervals, Sat Agility, Sun Complete Rest, daily stretching all week.");
+  lines.push("Plan: Mon Push Day + VO2 Max, Tue Pull Day + Zone 2, Wed Legs Day + Zone 2, Thu Alignment + Zone 2 Recovery, Fri Full Body Day, Sat Tennis/Agility, Sun Complete Rest, daily stretching all week.");
   lines.push("");
   const weekIds = Object.keys(allWeeks).sort().reverse().slice(0, 8);
   weekIds.forEach((weekId: string) => {
